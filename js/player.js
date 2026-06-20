@@ -3,8 +3,10 @@
 const player = {
     x: 0,
     y: 0,
+    color: "red",
     size: 20,
-    speed: 2
+    speed: 2,
+    hp: 100
 };
 
 // -------------------------
@@ -42,7 +44,7 @@ function bateu(x, y) {
 // Atualiza jogador
 // -------------------------
 
-function update() {
+function updatePlayer() {
 
     let dx = 0;
     let dy = 0;
@@ -63,27 +65,31 @@ function update() {
 
     // Testa movimento no eixo X
     const novoX = player.x + dx * player.speed;
-
+    // Verifica se o player colidiu no eixo y
     if (!bateu(novoX, player.y)) {
         player.x = novoX;
     }
 
     // Testa movimento no eixo Y
     const novoY = player.y + dy * player.speed;
-
+    // Verifica se o player colidiu no eixo y
     if (!bateu(player.x, novoY)) {
         player.y = novoY;
     }
 }
 
 // -------------------------
-// Desenha jogador
+// Desenha o player
 // -------------------------
 
 function drawPlayer() {
 
-    ctx.fillStyle = "red";
+    //Efeito visual pra quando o player receber dano
+    const piscando = player.ultimoDano && Date.now() - player.ultimoDano < 100;
+    //Define a cor do player
+    ctx.fillStyle = piscando ? "white" : "red";
 
+    //Desenha o player e defina sua pocição no mapa
     ctx.fillRect(
         canvas.width / 2 - player.size / 2,
         canvas.height / 2 - player.size / 2,
