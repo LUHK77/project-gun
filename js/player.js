@@ -3,7 +3,6 @@
 const player = {
     x: 0,
     y: 0,
-    color: "red",
     size: 20,
     speed: 2,
     hp: 100
@@ -96,4 +95,13 @@ function drawPlayer() {
         player.size,
         player.size
     );
+
+    //Barra de vida:
+    let barraL = 100;
+    let barraA = 20;  
+    ctx.fillStyle = "red";
+    ctx.fillRect(canvas.width - 10 - barraL, 10 + barraA, barraL, barraA);
+
+    ctx.fillStyle = "yellow";
+    ctx.fillRect(canvas.width - 10 - barraL, 10 + barraA, player.hp, barraA);
 }

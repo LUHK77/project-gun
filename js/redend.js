@@ -1,19 +1,21 @@
 // redend.js
 
-setInterval(spawnEnemy, 3000); // spawna um inimigo a cada 3 segundos
-spawnEnemy(); // primeiro inimigo na largada
+setInterval(spawnEnemy, 3000);
+spawnEnemy();
 
 function gameLoop() {
-    if (player.hp != 0) {
+    if (player.hp > 0) {
         updatePlayer();
+        updateBullets();
         updateEnemies();
-        checaColisaoPlayerEnemy();
     }
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawMap();
     drawEnemies();
+    drawBullets();
     drawPlayer();
+    drawGun();
 
     requestAnimationFrame(gameLoop);
 }

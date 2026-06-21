@@ -13,7 +13,8 @@ function spawnEnemy() {
         y: player.y + Math.sin(angulo) * distancia,
         size: 20,
         speed: 1,
-        hp: 100
+        damage: 10,
+        hp: 30
     });
 }
 
@@ -27,6 +28,8 @@ function updateEnemies() {
         const dist = Math.sqrt(dx * dx + dy * dy);
 
         if (dist < 1) continue;
+        //NOVOO
+        if (e.timerDano > 0) e.timerDano--;
 
         const vx = (dx / dist) * e.speed;
         const vy = (dy / dist) * e.speed;
@@ -39,7 +42,7 @@ function updateEnemies() {
         if (dist < (player.size / 2) + (e.size / 2)) {
             const agora = Date.now();
             if (!e.ultimoDano || agora - e.ultimoDano > 1000) {
-                player.hp -= 10;
+                player.hp -= e.damage;
                 player.ultimoDano = Date.now();
                 e.ultimoDano = agora;
             }
@@ -55,17 +58,10 @@ function drawEnemies() {
     const camY = player.y - canvas.height / 2;
 
     for (const e of enemies) {
-        ctx.fillStyle = "brown";
+        //Efeito visual pra quando o inimigo receber dano
+        const piscando = e.ultimoDano && Date.now() - e.ultimoDano < 100;
+        //Define a cor do inimigo
+        ctx.fillStyle = piscando ? "white" : "brown";
         ctx.fillRect(e.x - camX - e.size / 2, e.y - camY - e.size / 2, e.size, e.size);
-    }
-}
-
-function checaColisaoPlayerEnemy() {
-    for (const e of enemies) {
-        const dx = player.x - e.x;
-        const dy = player.y - e.y;
-        if (Math.sqrt(dx * dx + dy * dy) < (player.size / 2) + (e.size / 2)) {
-            player.vivo = false;
-        }
     }
 }
