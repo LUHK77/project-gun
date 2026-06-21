@@ -1,8 +1,19 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+// no topo do map.js — carrega as imagens dos tiles
+const imgSolo = [
+    new Image(), // solo1
+    new Image(), // solo2
+    new Image(), // solo3
+];
+imgSolo[0].src = "../assets/map/sprite_0.png";
+imgSolo[1].src = "../assets/map/sprite_1.png";
+imgSolo[2].src = "../assets/map/sprite_2.png";
+
 // Tamanho de cada tile em pixels
-const blocoTamanho = 32;
+//Tamanho padrão: const blocoTamanho = 32;
+const blocoTamanho = 64;
 const chunkSize = 10;
 
 /**
@@ -66,11 +77,8 @@ function drawMap() {
 
             // Gera uma grama e define o tamanho e pocição dela
             if (tile === "grass") {
-                ctx.fillStyle = "#3f8f3f";
-                ctx.fillRect(screenX, screenY, blocoTamanho, blocoTamanho);
-                ctx.strokeStyle = "#2d6a2d";
-                ctx.lineWidth = 2;
-                ctx.strokeRect(screenX, screenY, blocoTamanho, blocoTamanho);
+            const variacao = Math.abs((x * 374761393 + y * 668265263) >>> 0) % 3;
+            ctx.drawImage(imgSolo[variacao], screenX, screenY, blocoTamanho, blocoTamanho);
             } else {
             // Gera uma pedra e define o tamanho e pocição dela
                 ctx.fillStyle = "#666";

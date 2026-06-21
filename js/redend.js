@@ -5,7 +5,7 @@ spawnEnemy();
 
 function gameLoop() {
     if (player.hp > 0) {
-        updatePlayer();
+        updatePlayer(); // <- updateAnimacao já é chamado dentro daqui
         updateBullets();
         updateEnemies();
     }
