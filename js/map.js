@@ -22,11 +22,11 @@ const imgStone = [
     new Image(), // Pedra
 ];
 
-imgSolo[0].src = "../assets/map/sprite_0.png";
-imgSolo[1].src = "../assets/map/sprite_1.png";
-imgSolo[2].src = "../assets/map/sprite_2.png";
+imgSolo[0].src = "assets/map/sprite_0.png";
+imgSolo[1].src = "assets/map/sprite_1.png";
+imgSolo[2].src = "assets/map/sprite_2.png";
 
-imgStone[0].src= "../assets/map/pedra_0.png";
+imgStone[0].src= "assets/map/pedra_0.png";
 
 
 
