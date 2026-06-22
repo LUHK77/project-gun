@@ -13,10 +13,40 @@ function spawnEnemy() {
         y: player.y + Math.sin(angulo) * distancia,
         size: 20,
         speed: 1,
+        sprite: 64,
         damage: 10,
-        hp: 30
+        hp: 40
     });
 }
+
+
+// Carrega frames dos inimigos
+const framesEnemys = [];
+for (let i = 0; i <= 8; i++) {
+    const img = new Image();
+    img.src = `assets/enemys/zombie/sprite_${i}.png`;
+    
+    framesEnemys.push(img);
+}
+
+const animacaoI = {
+    frame: 0,
+    timer: 0,
+    velocidade: 12,
+    frames: framesEnemys 
+};
+
+function updateAnimacaoI() {
+    animacaoI.timer++;
+    if (animacaoI.timer >= animacaoI.velocidade) {
+        animacaoI.timer = 0;
+        animacaoI.frame = (animacaoI.frame + 1) % 9;
+    }
+
+    // Escolhe o array certo baseado se está movendo
+    animacaoI.frames = framesEnemys;
+}
+
 
 /**
  * Atualiza todos os inimigos do array.
@@ -26,6 +56,8 @@ function updateEnemies() {
         const dx = player.x - e.x;
         const dy = player.y - e.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
+
+        updateAnimacaoI();
 
         if (dist < 1) continue;
         //NOVOO
@@ -54,14 +86,33 @@ function updateEnemies() {
  * Desenha todos os inimigos.
  */
 function drawEnemies() {
-    const camX = player.x - canvas.width  / 2;
+    const camX = player.x - canvas.width / 2;
     const camY = player.y - canvas.height / 2;
 
     for (const e of enemies) {
-        //Efeito visual pra quando o inimigo receber dano
-        const piscando = e.ultimoDano && Date.now() - e.ultimoDano < 100;
-        //Define a cor do inimigo
-        ctx.fillStyle = piscando ? "white" : "brown";
-        ctx.fillRect(e.x - camX - e.size / 2, e.y - camY - e.size / 2, e.size, e.size);
+
+        ctx.save();
+
+        // Move a origem para o centro do inimigo
+        ctx.translate(
+            e.x - camX,
+            e.y - camY
+        );
+
+        // Se o player está à esquerda, espelha o sprite
+        if (player.x < e.x) {
+            ctx.scale(-1, 1);
+        }
+
+        // Desenha centralizado
+        ctx.drawImage(
+            animacaoI.frames[animacaoI.frame],
+            -e.sprite / 2,
+            -e.sprite / 2,
+            e.sprite,
+            e.sprite
+        );
+
+        ctx.restore();
     }
-}
+}s

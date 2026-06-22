@@ -134,8 +134,18 @@ function drawPlayer() {
     // Barra de vida
     let barraL = 100;
     let barraA = 20;
-    ctx.fillStyle = "red";
-    ctx.fillRect(10 + 10 + barraL, 10 + barraA, barraL, barraA);
-    ctx.fillStyle = "yellow";
-    ctx.fillRect(10 + 10 + barraL, 10 + barraA, player.hp, barraA);
+
+    // Texto HP
+    ctx.fillStyle = "white";
+    ctx.font = "bold 22px Arial";
+    ctx.fillText("HP:", 65, 11 + barraA);
+
+    // Borda da barra
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(10 + barraL, 10, barraL + 6, barraA + 6);
+
+    // Preenchimento proporcional ao hp
+    ctx.fillStyle = "white";
+    ctx.fillRect(10 + barraL + 3, 13, player.hp, barraA);
 }

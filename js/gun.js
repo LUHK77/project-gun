@@ -3,7 +3,7 @@
 const gun = {
     largura: 16,
     altura: 6,
-    dano: 10,
+    dano: 20,
     sprite: 50, // era 50, diminui
 };
 

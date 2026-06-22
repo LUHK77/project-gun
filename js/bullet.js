@@ -10,7 +10,6 @@ function spawnBullet(angulo) {
         tamanho: 5,
         dx: Math.cos(angulo),
         dy: Math.sin(angulo),
-        dano: 10,
         acertou: false,  // flag de acerto
         timerDano: 0,    // timer do número
     });
@@ -65,9 +64,9 @@ function drawBullets() {
         if (b.acertou) {
             // Mostra o número de dano onde a bala parou
             const opacidade = b.timerDano / 40;
-            ctx.fillStyle = `rgba(255, 255, 0, ${opacidade})`;
+            ctx.fillStyle = `rgba(255, 255, 255, ${opacidade})`;
             ctx.font = "bold 14px Arial";
-            ctx.fillText("-" + b.dano, b.x - camX, b.y - camY);
+            ctx.fillText("-" + gun.dano, b.x - camX, b.y - camY);
         } else {
             // Desenha a bala normalmente
             ctx.fillStyle = "yellow";
