@@ -12,10 +12,10 @@ function spawnEnemy() {
         x: player.x + Math.cos(angulo) * distancia,
         y: player.y + Math.sin(angulo) * distancia,
         size: 20,
-        speed: 2,
+        speed: 1,
         sprite: 64,
         damage: 10,
-        hp: 40
+        hp: 60
     });
 }
 
@@ -29,10 +29,18 @@ for (let i = 0; i <= 8; i++) {
     framesEnemys.push(img);
 }
 
+// Carrega frames de dano (sprites brancos)
+const framesEnemysDano = [];
+for (let i = 0; i <= 8; i++) {
+    const img = new Image();
+    img.src = `assets/enemys/zombie/hit/sprite_${i}.png`;
+    framesEnemysDano.push(img);
+}
+
 const animacaoI = {
     frame: 0,
     timer: 0,
-    velocidade: 6,
+    velocidade: 15,
     frames: framesEnemys 
 };
 
@@ -51,26 +59,23 @@ function updateAnimacaoI() {
 /**
  * Atualiza todos os inimigos do array.
  */
-function updateEnemies() {
+function updateEnemies(deltaTime) {
+    updateAnimacaoI(); // <- fora do loop, roda 1 vez por frame
+
     for (const e of enemies) {
         const dx = player.x - e.x;
         const dy = player.y - e.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
-        updateAnimacaoI();
-
         if (dist < 1) continue;
-        //NOVOO
         if (e.timerDano > 0) e.timerDano--;
 
-        const vx = (dx / dist) * e.speed;
-        const vy = (dy / dist) * e.speed;
+        const vx = (dx / dist) * e.speed * 100 * deltaTime;
+        const vy = (dy / dist) * e.speed * 100 * deltaTime;
 
-        //Colisão com blocos solidos
         if (!bateu(e.x + vx, e.y)) e.x += vx;
         if (!bateu(e.x, e.y + vy)) e.y += vy;
 
-        //Colisão com player
         if (dist < (player.size / 2) + (e.size / 2)) {
             const agora = Date.now();
             if (!e.ultimoDano || agora - e.ultimoDano > 1000) {
@@ -90,29 +95,14 @@ function drawEnemies() {
     const camY = player.y - canvas.height / 2;
 
     for (const e of enemies) {
+        // Usa frame branco se tomou dano há menos de 100ms
+        const piscando = e.ultimoDano && Date.now() - e.ultimoDano < 100;
+        const frames = piscando ? framesEnemysDano : framesEnemys;
 
         ctx.save();
-
-        // Move a origem para o centro do inimigo
-        ctx.translate(
-            e.x - camX,
-            e.y - camY
-        );
-
-        // Se o player está à esquerda, espelha o sprite
-        if (player.x < e.x) {
-            ctx.scale(-1, 1);
-        }
-
-        // Desenha centralizado
-        ctx.drawImage(
-            animacaoI.frames[animacaoI.frame],
-            -e.sprite / 2,
-            -e.sprite / 2,
-            e.sprite,
-            e.sprite
-        );
-
+        ctx.translate(e.x - camX, e.y - camY);
+        if (player.x < e.x) ctx.scale(-1, 1);
+        ctx.drawImage(frames[animacaoI.frame], -e.sprite / 2, -e.sprite / 2, e.sprite, e.sprite);
         ctx.restore();
     }
-}s
+}

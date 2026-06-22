@@ -6,7 +6,7 @@ function spawnBullet(angulo) {
     bullets.push({
         x: player.x,
         y: player.y,
-        velocidade: 6,
+        velocidade: 3,
         tamanho: 5,
         dx: Math.cos(angulo),
         dy: Math.sin(angulo),
@@ -21,7 +21,7 @@ function batuMapa(x, y) {
     return ehSolido(col, row);
 }
 
-function updateBullets() {
+function updateBullets(deltaTime) {
     for (let i = bullets.length - 1; i >= 0; i--) {
         const b = bullets[i];
 
@@ -32,8 +32,8 @@ function updateBullets() {
             continue;
         }
 
-        b.x += b.dx * b.velocidade;
-        b.y += b.dy * b.velocidade;
+        b.x += b.dx * b.velocidade * 400 * deltaTime;
+        b.y += b.dy * b.velocidade * 400 * deltaTime;
 
         if (batuMapa(b.x, b.y)) {
             bullets.splice(i, 1);

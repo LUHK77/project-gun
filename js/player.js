@@ -4,7 +4,7 @@ const player = {
     y: 0,
     size: 20,
     sprite: 64,
-    speed: 2,
+    speed: 1,
     hp: 100
 };
 
@@ -25,11 +25,19 @@ for (let i = 0; i <= 8; i++) {
     framesMove.push(img);
 }
 
+// Carrega frames de dano (sprites brancos)
+const framesDamege = [];
+for (let i = 0; i <= 8; i++) {
+    const img = new Image();
+    img.src = `assets/enemys/zombie/hit/sprite_${i}.png`;
+    framesDamege.push(img);
+}
+
 //Configura a animação do player
 const animacao = {
     frame: 0,
     timer: 0,
-    velocidade: 6,
+    velocidade: 12,
     frames: framesIdle // <- inicia com idle por padrão
 };
 
@@ -79,7 +87,10 @@ function bateu(x, y) {
 // Atualiza jogador
 // -------------------------
 
-function updatePlayer() {
+function updatePlayer(deltaTime) {
+    // ...
+    const velocidade = player.speed * 200 * deltaTime; // 200 é a velocidade base por segundo
+
     //Direção do eixo X
     let dx = 0;
     //Direção do eixo Y
@@ -103,11 +114,10 @@ function updatePlayer() {
     }
 
     // Calcula a nova posição do player e verifica colisão no eixo X
-    const novoX = player.x + dx * player.speed;
+   const novoX = player.x + dx * velocidade;
     if (!bateu(novoX, player.y)) player.x = novoX;
-
     // Calcula a nova posição do player e verifica colisão no eixo Y
-    const novoY = player.y + dy * player.speed;
+    const novoY = player.y + dy * velocidade;
     if (!bateu(player.x, novoY)) player.y = novoY;
 }
 
@@ -121,12 +131,7 @@ function drawPlayer() {
 
     // Efeito de dano
     const piscando = player.ultimoDano && Date.now() - player.ultimoDano < 100;
-    if (piscando) {
-        ctx.globalAlpha = 0.6;
-        ctx.fillStyle = "white";
-        ctx.fillRect(px - player.sprite / 2, py - player.sprite / 2, player.sprite, player.sprite);
-        ctx.globalAlpha = 1.0;
-    }
+    const frames = piscando ? framesDamege : animacao.frames; // <- usa animacao.frames
 
     ctx.save();
     ctx.translate(px, py);
@@ -135,7 +140,7 @@ function drawPlayer() {
     if (mouse.x < px) ctx.scale(-1, 1);
 
     // Desenha o frame atual da animação
-    ctx.drawImage(animacao.frames[animacao.frame], -player.sprite / 2, -player.sprite / 2, player.sprite, player.sprite);
+    ctx.drawImage(frames[animacao.frame], -player.sprite / 2, -player.sprite / 2, player.sprite, player.sprite);
     ctx.restore();
 
     // Barra de vida

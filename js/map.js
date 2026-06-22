@@ -1,6 +1,15 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+// Corrige escala em telas de alto DPI
+const dpr = window.devicePixelRatio || 1;
+canvas.width  = 1440 * dpr;
+canvas.height = 850  * dpr;
+canvas.style.width  = "1440px";
+canvas.style.height = "850px";
+ctx.scale(dpr, dpr);
+
+
 // no topo do map.js — carrega as imagens dos tiles
 const imgSolo = [
     new Image(), // solo1

@@ -39,7 +39,7 @@ for (let i = 0; i <= 8; i++) {
 const animacaoGun = {
     frame: 0,
     timer: 0,
-    velocidade: 1,
+    velocidade: 6,
 };
 
 const mouse = { x: 0, y: 0 };

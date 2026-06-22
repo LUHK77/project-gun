@@ -16,6 +16,10 @@ body {
 
 canvas{
 
-    border: 5px solid #ff0000;
+    display: block;
+    width: 1440px;
+    height: 850px;
+    image-rendering: pixelated;
+    border: 5px solid #312730;
     
 }
