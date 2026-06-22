@@ -2,9 +2,9 @@
 const player = {
     x: 0,
     y: 0,
-    size: 20,
+    size: 28,
     sprite: 64,
-    speed: 1,
+    speed: 0.8,
     hp: 100
 };
 
@@ -72,8 +72,8 @@ window.addEventListener("keyup", (event) => {
 function bateu(x, y) {
     const esquerda = Math.floor((x - player.size / 2) / blocoTamanho);
     const direita  = Math.floor((x + player.size / 2) / blocoTamanho);
-    const cima     = Math.floor((y - player.size / 2) / blocoTamanho);
-    const baixo    = Math.floor((y + player.size / 2) / blocoTamanho);
+    const cima     = Math.floor((y - 12 - player.size / 2) / blocoTamanho);
+    const baixo    = Math.floor((y + 12 + player.size / 2) / blocoTamanho);
 
     return (
         ehSolido(esquerda, cima) ||
@@ -149,7 +149,7 @@ function drawPlayer() {
 
     // Texto HP
     ctx.fillStyle = "white";
-    ctx.font = "bold 22px Arial";
+    ctx.font = "bold 22px GamerFonte";
     ctx.fillText("HP:", 65, 11 + barraA);
 
     // Borda da barra

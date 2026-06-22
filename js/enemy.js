@@ -11,11 +11,13 @@ function spawnEnemy() {
     enemies.push({
         x: player.x + Math.cos(angulo) * distancia,
         y: player.y + Math.sin(angulo) * distancia,
+        altura: 40,
+        largura: 28,
         size: 20,
         speed: 1,
         sprite: 64,
         damage: 10,
-        hp: 60
+        hp: 40
     });
 }
 
@@ -77,13 +79,13 @@ function updateEnemies(deltaTime) {
         if (!bateu(e.x, e.y + vy)) e.y += vy;
 
         if (dist < (player.size / 2) + (e.size / 2)) {
-            const agora = Date.now();
-            if (!e.ultimoDano || agora - e.ultimoDano > 1000) {
-                player.hp -= e.damage;
-                player.ultimoDano = Date.now();
-                e.ultimoDano = agora;
-            }
+        const agora = Date.now();
+        if (!e.ultimoAtaque || agora - e.ultimoAtaque > 1000) {
+            player.hp -= e.damage;
+            player.ultimoDano = Date.now();
+            e.ultimoAtaque = agora; // <- separado do ultimoDano
         }
+      }
     }
 }
 

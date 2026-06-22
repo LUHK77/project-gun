@@ -2,16 +2,22 @@
 
 const bullets = [];
 
+const bulletSprite = new Image();
+bulletSprite.src = `assets/guns/bullet/sprite_0.png`;
+
+// Tamanho visual do sprite da bala
+const bulletSize = 40;
+
 function spawnBullet(angulo) {
     bullets.push({
-        x: player.x,
-        y: player.y,
+        x: player.x + Math.cos(angulo) * 20,
+        y: player.y + Math.sin(angulo) * 20,
         velocidade: 3,
-        tamanho: 5,
+        tamanho: 8, // hitbox da bala
         dx: Math.cos(angulo),
         dy: Math.sin(angulo),
-        acertou: false,  // flag de acerto
-        timerDano: 0,    // timer do número
+        acertou: false,
+        timerDano: 0,
     });
 }
 
@@ -25,33 +31,41 @@ function updateBullets(deltaTime) {
     for (let i = bullets.length - 1; i >= 0; i--) {
         const b = bullets[i];
 
-        // Se já acertou, só conta o timer e remove quando zerar
         if (b.acertou) {
             b.timerDano--;
             if (b.timerDano <= 0) bullets.splice(i, 1);
             continue;
         }
 
-        b.x += b.dx * b.velocidade * 400 * deltaTime;
-        b.y += b.dy * b.velocidade * 400 * deltaTime;
+        const passos = 3;
+        const stepX = (b.dx * b.velocidade * 400 * deltaTime) / passos;
+        const stepY = (b.dy * b.velocidade * 400 * deltaTime) / passos;
 
-        if (batuMapa(b.x, b.y)) {
-            bullets.splice(i, 1);
-            continue;
-        }
+        let removida = false;
+        for (let s = 0; s < passos; s++) {
+            b.x += stepX;
+            b.y += stepY;
 
-        for (let j = enemies.length - 1; j >= 0; j--) {
-            const e = enemies[j];
-            const dist = Math.sqrt((b.x - e.x) ** 2 + (b.y - e.y) ** 2);
-            if (dist < e.size / 2 + b.tamanho) {
-                e.hp -= gun.dano;
-                e.ultimoDano = Date.now();
-                if (e.hp <= 0) enemies.splice(j, 1);
-                // Para a bala e inicia o timer do número
-                b.acertou = true;
-                b.timerDano = 40;
+            if (batuMapa(b.x, b.y)) {
+                bullets.splice(i, 1);
+                removida = true;
                 break;
             }
+
+            for (let j = enemies.length - 1; j >= 0; j--) {
+                const e = enemies[j];
+                const dist = Math.sqrt((b.x - e.x) ** 2 + (b.y - e.y) ** 2);
+                if (dist < e.size / 2 + b.tamanho) {
+                    e.hp -= gun.dano;
+                    e.ultimoDano = Date.now();
+                    if (e.hp <= 0) enemies.splice(j, 1);
+                    b.acertou = true;
+                    b.timerDano = 40;
+                    removida = true;
+                    break;
+                }
+            }
+            if (removida) break;
         }
     }
 }
@@ -62,17 +76,20 @@ function drawBullets() {
 
     for (const b of bullets) {
         if (b.acertou) {
-            // Mostra o número de dano onde a bala parou
             const opacidade = b.timerDano / 40;
             ctx.fillStyle = `rgba(255, 255, 255, ${opacidade})`;
-            ctx.font = "bold 14px Arial";
+            ctx.font = "bold 14px GamerFonte";
             ctx.fillText("-" + gun.dano, b.x - camX, b.y - camY);
         } else {
-            // Desenha a bala normalmente
-            ctx.fillStyle = "yellow";
-            ctx.beginPath();
-            ctx.arc(b.x - camX, b.y - camY, b.tamanho, 0, Math.PI * 2);
-            ctx.fill();
+            const screenX = b.x - camX;
+            const screenY = b.y - camY;
+
+            ctx.save();
+            ctx.translate(screenX, screenY);
+            ctx.rotate(Math.atan2(b.dy, b.dx));
+            // Sprite grande centralizado — cobre a área da arma visualmente
+            ctx.drawImage(bulletSprite, -bulletSize / 2, -bulletSize / 2, bulletSize, bulletSize);
+            ctx.restore();
         }
     }
 }

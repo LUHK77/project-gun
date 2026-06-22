@@ -1,14 +1,11 @@
 // redend.js
-
-setInterval(spawnEnemy, 3000);
+let taxaSpawn = 3000;
+let intervalSpawn = setInterval(spawnEnemy, taxaSpawn);
 spawnEnemy();
 
 let ultimoFrame = 0;
 
 function gameLoop(timestamp) {
-    // deltaTime: quanto tempo passou desde o último frame (em segundos)
-    // num monitor 60hz = ~0.016, num 144hz = ~0.007
-    // multiplicando pela velocidade garante o mesmo resultado em qualquer monitor
     const deltaTime = (timestamp - ultimoFrame) / 1000;
     ultimoFrame = timestamp;
 
@@ -17,6 +14,7 @@ function gameLoop(timestamp) {
         updateBullets(deltaTime);
         updateEnemies(deltaTime);
         updateGun();
+        updateTimer();
     }
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -25,6 +23,10 @@ function gameLoop(timestamp) {
     drawBullets();
     drawPlayer();
     drawGun();
+    drawTimer();
+
+    // Sempre por último, por cima de tudo
+    if (player.hp <= 0) drawGameOver();
 
     requestAnimationFrame(gameLoop);
 }

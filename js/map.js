@@ -54,7 +54,7 @@ function geraBloco(tileX, tileY) {
     const seed = Math.abs(chunkX * 37 + chunkY * 71);
 
     // Apenas 10% dos chunks terão pedra
-    if (seed % 10 !== 0) return "grass";
+    if (seed % 2 !== 0) return "grass";
 
     // Posição fixa da pedra dentro do chunk
     const pedraX = seed % chunkSize;

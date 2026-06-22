@@ -1,3 +1,8 @@
+@font-face {
+    font-family: "GamerFonte";
+    src: url("../assets/fonts/lunchds.ttf");
+}
+
 *{
     margin: 0;
     padding: 0;
