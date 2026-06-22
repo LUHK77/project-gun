@@ -12,7 +12,7 @@ function spawnEnemy() {
         x: player.x + Math.cos(angulo) * distancia,
         y: player.y + Math.sin(angulo) * distancia,
         size: 20,
-        speed: 1,
+        speed: 2,
         sprite: 64,
         damage: 10,
         hp: 40
@@ -32,7 +32,7 @@ for (let i = 0; i <= 8; i++) {
 const animacaoI = {
     frame: 0,
     timer: 0,
-    velocidade: 12,
+    velocidade: 6,
     frames: framesEnemys 
 };
 

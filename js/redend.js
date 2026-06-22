@@ -8,6 +8,7 @@ function gameLoop() {
         updatePlayer(); // <- updateAnimacao já é chamado dentro daqui
         updateBullets();
         updateEnemies();
+        updateGun();
     }
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);

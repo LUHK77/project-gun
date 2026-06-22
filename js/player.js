@@ -1,11 +1,10 @@
 //Objeto do player
-
 const player = {
     x: 0,
     y: 0,
     size: 20,
     sprite: 64,
-    speed: 1,
+    speed: 2,
     hp: 100
 };
 
@@ -26,13 +25,15 @@ for (let i = 0; i <= 8; i++) {
     framesMove.push(img);
 }
 
+//Configura a animação do player
 const animacao = {
     frame: 0,
     timer: 0,
-    velocidade: 12,
+    velocidade: 6,
     frames: framesIdle // <- inicia com idle por padrão
 };
 
+//Atualiza a animação do player sempre que ele se move ou para
 function updateAnimacao(movendo) {
     animacao.timer++;
     if (animacao.timer >= animacao.velocidade) {
@@ -79,27 +80,33 @@ function bateu(x, y) {
 // -------------------------
 
 function updatePlayer() {
+    //Direção do eixo X
     let dx = 0;
+    //Direção do eixo Y
     let dy = 0;
 
+    // Checa quais teclas estão pressionadas e ajusta dx e dy
     if (keys["w"] || keys["arrowup"]) dy--;
     if (keys["s"] || keys["arrowdown"]) dy++;
     if (keys["a"] || keys["arrowleft"]) dx--;
     if (keys["d"] || keys["arrowright"]) dx++;
 
-    // Checa ANTES de normalizar
+    // Verifica se o player está se movendo para atualizar a animação
     const movendo = dx !== 0 || dy !== 0;
     updateAnimacao(movendo);
 
+    // Normaliza o vetor de movimento para evitar movimento mais rápido na diagonal
     const tamanho = Math.sqrt(dx * dx + dy * dy);
     if (tamanho > 0) {
         dx /= tamanho;
         dy /= tamanho;
     }
 
+    // Calcula a nova posição do player e verifica colisão no eixo X
     const novoX = player.x + dx * player.speed;
     if (!bateu(novoX, player.y)) player.x = novoX;
 
+    // Calcula a nova posição do player e verifica colisão no eixo Y
     const novoY = player.y + dy * player.speed;
     if (!bateu(player.x, novoY)) player.y = novoY;
 }
