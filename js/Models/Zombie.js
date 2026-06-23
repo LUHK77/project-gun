@@ -1,6 +1,9 @@
 // zombie.js
+import { ctx } from '../map.js';
+import { player } from './Player.js';
+import { Enemy } from './Enemy.js';
 
-class Zombie extends Enemy {
+export class Zombie extends Enemy {
     static frames      = [];
     static framesDano  = [];
 

@@ -1,6 +1,9 @@
-// enemy.js
+// js/Models/Enemy.js
 
-class Enemy {
+import { ctx, blocoTamanho, ehSolido } from '../map.js';
+import { player } from './Player.js';
+
+export class Enemy {
     constructor(x, y) {
         this.x = x;
         this.y = y;
@@ -21,7 +24,6 @@ class Enemy {
         this.timerDano = 0;
     }
 
-    // Verifica colisão com tiles sólidos usando o próprio tamanho
     bateu(x, y) {
         const esquerda = Math.floor((x - this.size / 2) / blocoTamanho);
         const direita  = Math.floor((x + this.size / 2) / blocoTamanho);
@@ -53,7 +55,6 @@ class Enemy {
 
         if (this.timerDano > 0) this.timerDano--;
 
-        // Dano ao player
         if (dist < (player.size / 2) + (this.size / 2)) {
             const agora = Date.now();
             if (agora - this.ultimoAtaque > 1000) {
@@ -65,7 +66,6 @@ class Enemy {
 
         if (dist < 1) return;
 
-        // Movimento
         const vx = (dx / dist) * this.speed * 100 * deltaTime;
         const vy = (dy / dist) * this.speed * 100 * deltaTime;
 
@@ -78,23 +78,13 @@ class Enemy {
 
 // ── GERENCIAMENTO ─────────────────────────────────────────────────────────────
 
-const enemies = [];
+export const enemies = [];
 
-function spawnEnemy() {
-    const angulo = Math.random() * Math.PI * 2;
-    const distancia = 400 + Math.random() * 200;
-
-    enemies.push(new Zombie(
-        player.x + Math.cos(angulo) * distancia,
-        player.y + Math.sin(angulo) * distancia
-    ));
-}
-
-function updateEnemies(deltaTime) {
+export function updateEnemies(deltaTime) {
     for (const e of enemies) e.update(deltaTime);
 }
 
-function drawEnemies() {
+export function drawEnemies() {
     const camX = player.x - 1440 / 2;
     const camY = player.y - 850  / 2;
     for (const e of enemies) e.draw(camX, camY);

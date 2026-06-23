@@ -1,4 +1,10 @@
-class Bullet {
+// js/Models/Bullet.js
+
+import { ctx, blocoTamanho, ehSolido } from '../map.js';
+import { player } from './Player.js';
+import { enemies } from './Enemy.js';
+
+export class Bullet {
     static sprite = new Image();
 
     static carregarSprite() {
@@ -11,8 +17,8 @@ class Bullet {
         this.dx = Math.cos(angulo);
         this.dy = Math.sin(angulo);
         this.velocidade = 3;
-        this.tamanho = 9;        // hitbox
-        this.tamanhoSprite = tamanhoSprite || 40; // visual
+        this.tamanho = 9;
+        this.tamanhoSprite = tamanhoSprite || 40;
         this.dano = dano;
         this.acertou = false;
         this.timerDano = 0;
@@ -33,7 +39,7 @@ class Bullet {
             this.y += stepY;
 
             if (batuMapa(this.x, this.y)) {
-                this.timerDano = 0; // remove imediatamente
+                this.timerDano = 0;
                 this.acertou = true;
                 break;
             }
@@ -82,7 +88,7 @@ function batuMapa(x, y) {
     return ehSolido(col, row);
 }
 
-function spawnBullet(angulo, dano, tamanhoSprite) {
+export function spawnBullet(angulo, dano, tamanhoSprite) {
     bullets.push(new Bullet(
         player.x + Math.cos(angulo) * 20,
         player.y + Math.sin(angulo) * 20,
@@ -92,7 +98,7 @@ function spawnBullet(angulo, dano, tamanhoSprite) {
     ));
 }
 
-function updateBullets(deltaTime) {
+export function updateBullets(deltaTime) {
     for (let i = bullets.length - 1; i >= 0; i--) {
         bullets[i].update(deltaTime);
         if (bullets[i].acertou && bullets[i].timerDano <= 0) {
@@ -101,7 +107,7 @@ function updateBullets(deltaTime) {
     }
 }
 
-function drawBullets() {
+export function drawBullets() {
     const camX = player.x - 1440 / 2;
     const camY = player.y - 850  / 2;
     for (const b of bullets) b.draw(camX, camY);

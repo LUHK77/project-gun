@@ -1,20 +1,26 @@
-// gameOverUi.js
+// js/ui.js
+
+import { ctx, canvas } from './map.js';
+import { player } from './Models/Player.js';
+import { enemies } from './Models/Enemy.js';
+import { gun } from './Models/Pistol.js';
 
 const largura = 1440;
 const altura  = 850;
 
 let timerMorte = 0;
+let tempoInicio = Date.now();
+let tempoJogo = 0;
+
+export let taxaSpawn = 3000;
+export let intervalSpawn = null;
 
 // ── TIMER ─────────────────────────────────────────────────────────────────────
 
-let tempoInicio = Date.now();
-let tempoJogo = 0; // segundos sobrevividos
-
-function updateTimer() {
+export function updateTimer(spawnEnemy) {
     if (player.hp > 0) {
         tempoJogo = Math.floor((Date.now() - tempoInicio) / 1000);
 
-        // Atualiza a taxa de spawn a cada minuto até o limite
         const novasTaxa = Math.max(500, 3000 - Math.floor(tempoJogo / 60) * 500);
         if (novasTaxa !== taxaSpawn) {
             taxaSpawn = novasTaxa;
@@ -24,7 +30,7 @@ function updateTimer() {
     }
 }
 
-function drawTimer() {
+export function drawTimer() {
     const minutos  = Math.floor(tempoJogo / 60).toString().padStart(2, "0");
     const segundos = (tempoJogo % 60).toString().padStart(2, "0");
 
@@ -37,7 +43,7 @@ function drawTimer() {
 
 // ── GAME OVER ─────────────────────────────────────────────────────────────────
 
-function drawGameOver() {
+export function drawGameOver() {
     timerMorte++;
 
     ctx.fillStyle = "rgba(20, 20, 20)";
@@ -48,7 +54,6 @@ function drawGameOver() {
 
     ctx.textAlign = "center";
 
-    // Rastro
     for (let i = 4; i >= 1; i--) {
         const opacidade = i * 0.06;
         const offsetX = Math.sin((timerMorte - i * 3) * 0.3) * 6;
@@ -58,19 +63,16 @@ function drawGameOver() {
         ctx.fillText("VOCE MORREU", largura / 2 + offsetX, altura / 2 - 80 + offsetY);
     }
 
-    // Texto principal
     ctx.fillStyle = "white";
     ctx.font = "bold 64px GamerFonte";
     ctx.fillText("VOCE MORREU", largura / 2 + tremX, altura / 2 - 80 + tremY);
 
-    // Tempo sobrevivido
     const minutos  = Math.floor(tempoJogo / 60).toString().padStart(2, "0");
     const segundos = (tempoJogo % 60).toString().padStart(2, "0");
     ctx.fillStyle = "rgba(255,255,255,0.7)";
     ctx.font = "24px GamerFonte";
     ctx.fillText(`Voce sobreviveu por ${minutos}:${segundos}`, largura / 2, altura / 2 - 20);
 
-    // Botão
     const btnW = 260;
     const btnH = 60;
     const btnX = largura / 2 - btnW / 2;
@@ -87,10 +89,11 @@ function drawGameOver() {
 
 // ── REINÍCIO ──────────────────────────────────────────────────────────────────
 
-function reiniciarJogo() {
+export function reiniciarJogo(spawnEnemy) {
     timerMorte = 0;
-    tempoInicio = Date.now(); // reseta o timer
+    tempoInicio = Date.now();
     tempoJogo = 0;
+    taxaSpawn = 3000;
 
     player.x = 0;
     player.y = 0;
@@ -98,30 +101,36 @@ function reiniciarJogo() {
     player.ultimoDano = 0;
 
     enemies.length = 0;
-    bullets.length = 0;
 
     gun.balas = gun.maxBalas;
     gun.recarregando = false;
     gun.atirando = false;
     gun.ultimoTiro = 0;
+
+    clearInterval(intervalSpawn);
+    intervalSpawn = setInterval(spawnEnemy, taxaSpawn);
 }
 
 // ── INPUT ─────────────────────────────────────────────────────────────────────
 
-canvas.addEventListener("click", (e) => {
-    if (player.hp > 0) return;
+export function initUI(spawnEnemy) {
+    intervalSpawn = setInterval(spawnEnemy, taxaSpawn);
 
-    const rect = canvas.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const clickY = e.clientY - rect.top;
+    canvas.addEventListener("click", (e) => {
+        if (player.hp > 0) return;
 
-    const btnW = 260;
-    const btnH = 60;
-    const btnX = largura / 2 - btnW / 2;
-    const btnY = altura / 2 + 20;
+        const rect = canvas.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const clickY = e.clientY - rect.top;
 
-    if (clickX >= btnX && clickX <= btnX + btnW &&
-        clickY >= btnY && clickY <= btnY + btnH) {
-        reiniciarJogo();
-    }
-});
+        const btnW = 260;
+        const btnH = 60;
+        const btnX = largura / 2 - btnW / 2;
+        const btnY = altura / 2 + 20;
+
+        if (clickX >= btnX && clickX <= btnX + btnW &&
+            clickY >= btnY && clickY <= btnY + btnH) {
+            reiniciarJogo(spawnEnemy);
+        }
+    });
+}

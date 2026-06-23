@@ -1,8 +1,11 @@
-// pistol.js
+// js/Models/Pistol.js
 
-class Pistol extends Gun {
-    static spriteIdle  = new Image();
-    static framesShot  = [];
+import { ctx } from '../map.js';
+import { Gun, mouse, angulo } from './Gun.js';
+
+export class Pistol extends Gun {
+    static spriteIdle   = new Image();
+    static framesShot   = [];
     static framesReload = [];
 
     static carregarSprites() {
@@ -61,4 +64,4 @@ class Pistol extends Gun {
 }
 
 Pistol.carregarSprites();
-let gun = new Pistol();
+export const gun = new Pistol();

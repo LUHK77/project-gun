@@ -1,6 +1,20 @@
-// gun.js
+// js/Models/Gun.js
 
-class Gun {
+import { ctx, canvas } from '../map.js';
+import { player } from './Player.js';
+import { spawnBullet } from './Bullet.js';
+
+export const mouse = { x: 0, y: 0 };
+export let angulo = 0;
+
+window.addEventListener("mousemove", (e) => {
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+    angulo = Math.atan2(mouse.y - 850 / 2, mouse.x - 1440 / 2);
+});
+
+export class Gun {
     constructor() {
         this.dano = 0;
         this.sprite = 0;
@@ -74,7 +88,6 @@ class Gun {
         }
     }
 
-    // Draw vazio — cada subclasse implementa o próprio
     draw() {}
 
     drawBarra() {
@@ -96,19 +109,3 @@ class Gun {
         ctx.strokeRect(barraX, barraY, barraW, barraH);
     }
 }
-
-// Mouse e ângulo globais usados por todas as armas
-const mouse = { x: 0, y: 0 };
-let angulo = 0;
-
-window.addEventListener("mousemove", (e) => {
-    const rect = canvas.getBoundingClientRect();
-    mouse.x = e.clientX - rect.left;
-    mouse.y = e.clientY - rect.top;
-    angulo = Math.atan2(mouse.y - 850 / 2, mouse.x - 1440 / 2);
-});
-
-window.addEventListener("click", () => gun.atirar(angulo));
-
-function updateGun(deltaTime) { gun.update(deltaTime); }
-function drawGun() { gun.draw(); gun.drawBarra(); }

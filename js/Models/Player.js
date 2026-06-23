@@ -1,6 +1,8 @@
-// player.js
+// js/Models/Player.js
 
-class Player {
+import { canvas, ctx, blocoTamanho, ehSolido } from '../map.js';
+
+export class Player {
     static framesIdle   = [];
     static framesMove   = [];
     static framesDamage = [];
@@ -37,13 +39,11 @@ class Player {
             frames: Player.framesIdle,
         };
 
-        // Controle do teclado
         this.keys = {};
         window.addEventListener("keydown", (e) => { this.keys[e.key.toLowerCase()] = true; });
         window.addEventListener("keyup",   (e) => { this.keys[e.key.toLowerCase()] = false; });
     }
 
-    // Verifica colisão com tiles sólidos
     bateu(x, y) {
         const esquerda = Math.floor((x - this.size / 2) / blocoTamanho);
         const direita  = Math.floor((x + this.size / 2) / blocoTamanho);
@@ -58,7 +58,6 @@ class Player {
         );
     }
 
-    // Atualiza animação
     updateAnimacao(movendo, deltaTime) {
         this.animacao.timer += deltaTime * 60;
         if (this.animacao.timer >= this.animacao.velocidade) {
@@ -68,8 +67,7 @@ class Player {
         this.animacao.frames = movendo ? Player.framesMove : Player.framesIdle;
     }
 
-    // Atualiza movimento
-    update(deltaTime) {
+    update(deltaTime, mouse) {
         const velocidade = this.speed * 200 * deltaTime;
 
         let dx = 0;
@@ -93,8 +91,7 @@ class Player {
         if (!this.bateu(this.x, novoY)) this.y = novoY;
     }
 
-    // Desenha o player e a barra de vida
-    draw() {
+    draw(mouse) {
         const px = 1440 / 2;
         const py = 850  / 2;
 
@@ -126,9 +123,4 @@ class Player {
 
 Player.carregarSprites();
 
-// ── INSTÂNCIA ─────────────────────────────────────────────────────────────────
-
-const player = new Player();
-
-function updatePlayer(deltaTime) { player.update(deltaTime); }
-function drawPlayer() { player.draw(); }
+export const player = new Player();
