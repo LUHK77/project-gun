@@ -35,8 +35,17 @@ export class Gun {
         this.animacao = {
             frame: 0, // Frame atual da animação
             timer: 0, // Timer para controlar a velocidade da animação
-            velocidade: 3, // Velocidade da animação
+            velocidade: 2, // Velocidade da animação
         };
+    }
+
+    recarregar() {
+        if (this.recarregando || this.balas >= this.maxBalas) return; // evita recarregar à toa
+        this.recarregando = true;
+        this.atirando = false;
+        this.inicioRecarga = Date.now();
+        this.animacao.frame = 0;
+        this.animacao.timer = 0;
     }
 
     atirar(angulo) {
@@ -53,11 +62,7 @@ export class Gun {
         spawnBullet(angulo, this.dano, this.tamanhoBalas);
 
         if (this.balas <= 0) {
-            this.recarregando = true;
-            this.atirando = false;
-            this.inicioRecarga = Date.now();
-            this.animacao.frame = 0;
-            this.animacao.timer = 0;
+            this.recarregar();
         }
     }
 

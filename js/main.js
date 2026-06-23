@@ -11,6 +11,12 @@ import { initUI, updateTimer, drawTimer, drawGameOver } from './ui.js';
 // Listener de tiro
 window.addEventListener("click", () => gun.atirar(angulo));
 
+window.addEventListener("keydown", (e) => {
+    if (e.key.toLowerCase() === "r") {
+        gun.recarregar();
+    }
+});
+
 // Inicia UI e spawn
 initUI(spawnEnemy);
 spawnEnemy();

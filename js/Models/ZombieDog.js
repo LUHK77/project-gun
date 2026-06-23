@@ -3,33 +3,34 @@ import { ctx } from '../map.js';
 import { player } from './Player.js';
 import { Enemy } from './Enemy.js';
 
-export class Zombie extends Enemy {
+export class ZombieDog extends Enemy {
     static frames      = [];
     static framesDano  = [];
 
     static carregarSprites() {
         for (let i = 0; i <= 8; i++) {
             const img = new Image();
-            img.src = `assets/enemys/zombie/sprite_${i}.png`;
-            Zombie.frames.push(img);
+            img.src = `assets/enemys/zombie_dog/sprite_${i}.png`;
+            ZombieDog.frames.push(img);
 
             const imgDano = new Image();
-            imgDano.src = `assets/enemys/zombie/hit/sprite_${i}.png`;
-            Zombie.framesDano.push(imgDano);
+            imgDano.src = `assets/enemys/zombie_dog/hit/sprite_${i}.png`;
+            ZombieDog.framesDano.push(imgDano);
         }
     }
 
     constructor(x, y) {
         super(x, y);
-        this.speed  = 1;
-        this.hp     = 40;
-        this.damage = 10;
-        this.sprite = 64;
+        this.speed  = 1.5;
+        this.hp     = 120;
+        this.damage = 30;
+        this.sprite = 96;
+        this.size = 30;
     }
 
     draw(camX, camY) {
         const piscando = Date.now() - this.ultimoDano < 100;
-        const frames = piscando ? Zombie.framesDano : Zombie.frames;
+        const frames = piscando ? ZombieDog.framesDano : ZombieDog.frames;
 
         ctx.save();
         ctx.translate(this.x - camX, this.y - camY);
@@ -39,4 +40,4 @@ export class Zombie extends Enemy {
     }
 }
 
-Zombie.carregarSprites();
+ZombieDog.carregarSprites();
