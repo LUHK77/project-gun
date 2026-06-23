@@ -95,7 +95,7 @@ export function drawMenu() {
 export function drawGameOver() {
     tMorte++;
 
-    drawBg(img.over); // 👈 SEM OPACIDADE
+    drawBg(img.over);
     rect(0, 0, W, H, "rgba(0,0,0,.65)");
 
     const x = W / 2, y = H / 2;
