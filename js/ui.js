@@ -18,8 +18,8 @@ const img = {
     over: new Image()
 };
 
-img.menu.src = "../assets/menu-bg.png";
-img.over.src = "../assets/gameover-bg.png";
+img.menu.src = "assets/menu-bg.png";
+img.over.src = "assets/gameover-bg.png";
 
 const BTN = {
     menu: { w: 280, h: 70, text: "INICIAR JOGO", color: "#2d7c31" },
