@@ -7,6 +7,7 @@ import { spawnBullet } from './Bullet.js';
 export const mouse = { x: 0, y: 0 };
 export let angulo = 0;
 
+// Atualiza a posição do mouse e calcula o ângulo em relação ao centro do canvas
 window.addEventListener("mousemove", (e) => {
     const rect = canvas.getBoundingClientRect();
     mouse.x = e.clientX - rect.left;
@@ -14,25 +15,27 @@ window.addEventListener("mousemove", (e) => {
     angulo = Math.atan2(mouse.y - 850 / 2, mouse.x - 1440 / 2);
 });
 
+// Classe Gun representa uma arma no jogo, com propriedades e métodos
 export class Gun {
     constructor() {
-        this.dano = 0;
-        this.sprite = 0;
-        this.spriteRecoil = 0;
-        this.cadencia = 0;
-        this.ultimoTiro = 0;
-        this.atirando = false;
-        this.balas = 0;
-        this.maxBalas = 0;
-        this.recarregando = false;
-        this.tempoRecarga = 0;
-        this.inicioRecarga = 0;
-        this.tamanhoBalas = 0;
-
+        this.dano = 0; // Dano da arma
+        this.sprite = 0; // Sprite da arma
+        this.spriteRecoil = 0; // Sprite da arma recarregando
+        this.cadencia = 0; // velocidade de cada disparo
+        this.ultimoTiro = 0; // Timestamp do último disparo
+        this.atirando = false; // Indica se a arma está atirando
+        this.balas = 0; // Número de balas restantes
+        this.maxBalas = 0; // Número máximo de balas
+        this.recarregando = false; // Indica se a arma está recarregando
+        this.tempoRecarga = 0; // Tempo necessário para recarregar a arma
+        this.inicioRecarga = 0; // Timestamp do início da recarga
+        this.tamanhoBalas = 0; // Tamanho das balas disparadas pela arma
+        
+        // Propriedades de animação da arma
         this.animacao = {
-            frame: 0,
-            timer: 0,
-            velocidade: 3,
+            frame: 0, // Frame atual da animação
+            timer: 0, // Timer para controlar a velocidade da animação
+            velocidade: 3, // Velocidade da animação
         };
     }
 
