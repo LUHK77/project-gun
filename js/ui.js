@@ -1,136 +1,179 @@
-// js/ui.js
-
 import { ctx, canvas } from './map.js';
 import { player } from './Models/Player.js';
 import { enemies } from './Models/Enemy.js';
 import { gun } from './Models/Pistol.js';
 
-const largura = 1440;
-const altura  = 850;
+const W = 1440, H = 850;
 
-let timerMorte = 0;
-let tempoInicio = Date.now();
-let tempoJogo = 0;
-
+export let jogoIniciado = false;
 export let taxaSpawn = 3000;
 export let intervalSpawn = null;
 
-// ── TIMER ─────────────────────────────────────────────────────────────────────
+let tMorte = 0;
+let tInicio = Date.now();
+let tJogo = 0;
+
+const img = {
+    menu: new Image(),
+    over: new Image()
+};
+
+img.menu.src = "../assets/menu-bg.png";
+img.over.src = "../assets/gameover-bg.png";
+
+const BTN = {
+    menu: { w: 280, h: 70, text: "INICIAR JOGO", color: "#2d7c31" },
+    over: { w: 260, h: 60, text: "Tentar Novamente", color: "#7c2a21" }
+};
+
+// ── HELPERS ─────────────────────────────
+
+const drawBg = (image) => {
+    ctx.drawImage(image, 0, 0, W, H);
+};
+
+const rect = (x, y, w, h, c) => {
+    ctx.fillStyle = c;
+    ctx.fillRect(x, y, w, h);
+};
+
+const text = (t, x, y, size = 28, color = "#fff") => {
+    ctx.fillStyle = color;
+    ctx.font = `bold ${size}px GamerFonte`;
+    ctx.textAlign = "center";
+    ctx.fillText(t, x, y);
+};
+
+const btn = (b, x, y) => {
+    rect(x, y, b.w, b.h, b.color);
+    text(b.text, x + b.w / 2, y + b.h / 2 + 10);
+};
+
+const hit = (mx, my, x, y, w, h) =>
+    mx >= x && mx <= x + w && my >= y && my <= y + h;
+
+const tempo = () => {
+    const m = String(Math.floor(tJogo / 60)).padStart(2, "0");
+    const s = String(tJogo % 60).padStart(2, "0");
+    return `${m}:${s}`;
+};
+
+// ── TIMER ─────────────────────────────
 
 export function updateTimer(spawnEnemy) {
-    if (player.hp > 0) {
-        tempoJogo = Math.floor((Date.now() - tempoInicio) / 1000);
+    if (!jogoIniciado || player.hp <= 0) return;
 
-        const novasTaxa = Math.max(500, 3000 - Math.floor(tempoJogo / 60) * 500);
-        if (novasTaxa !== taxaSpawn) {
-            taxaSpawn = novasTaxa;
-            clearInterval(intervalSpawn);
-            intervalSpawn = setInterval(spawnEnemy, taxaSpawn);
-        }
+    tJogo = Math.floor((Date.now() - tInicio) / 1000);
+
+    const n = Math.max(500, 3000 - Math.floor(tJogo / 60) * 500);
+
+    if (n !== taxaSpawn) {
+        taxaSpawn = n;
+        clearInterval(intervalSpawn);
+        intervalSpawn = setInterval(spawnEnemy, n);
     }
 }
 
-export function drawTimer() {
-    const minutos  = Math.floor(tempoJogo / 60).toString().padStart(2, "0");
-    const segundos = (tempoJogo % 60).toString().padStart(2, "0");
+export const drawTimer = () =>
+    jogoIniciado && player.hp > 0 &&
+    text(tempo(), W / 2, 40, 32);
 
-    ctx.fillStyle = "white";
-    ctx.font = "bold 32px GamerFonte";
-    ctx.textAlign = "center";
-    ctx.fillText(`${minutos}:${segundos}`, largura / 2, 40);
-    ctx.textAlign = "left";
+// ── MENU ─────────────────────────────
+
+export function drawMenu() {
+    drawBg(img.menu);
+    rect(0, 0, W, H, "rgba(0,0,0,.55)");
+
+    text("Zombie Survivors", W / 2, H / 2 - 140, 90);
+    text("Sobreviva o apocalipse", W / 2, H / 2 - 80, 28, "rgba(255,255,255,.85)");
+
+    btn(BTN.menu, W / 2 - BTN.menu.w / 2, H / 2 + 20);
 }
 
-// ── GAME OVER ─────────────────────────────────────────────────────────────────
+// ── GAME OVER ─────────────────────────
 
 export function drawGameOver() {
-    timerMorte++;
+    tMorte++;
 
-    ctx.fillStyle = "rgba(20, 20, 20)";
-    ctx.fillRect(0, 0, largura, altura);
+    drawBg(img.over);
+    rect(0, 0, W, H, "rgba(0,0,0,.65)");
 
-    const tremX = Math.sin(timerMorte * 0.3) * 6;
-    const tremY = Math.cos(timerMorte * 0.2) * 4;
-
-    ctx.textAlign = "center";
+    const x = W / 2, y = H / 2;
 
     for (let i = 4; i >= 1; i--) {
-        const opacidade = i * 0.06;
-        const offsetX = Math.sin((timerMorte - i * 3) * 0.3) * 6;
-        const offsetY = Math.cos((timerMorte - i * 3) * 0.2) * 4;
-        ctx.fillStyle = `rgba(255, 0, 0, ${opacidade})`;
-        ctx.font = "bold 64px GamerFonte";
-        ctx.fillText("VOCE MORREU", largura / 2 + offsetX, altura / 2 - 80 + offsetY);
+        text(
+            "VOCE MORREU",
+            x + Math.sin((tMorte - i * 3) * 0.3) * 6,
+            y - 80 + Math.cos((tMorte - i * 3) * 0.2) * 4,
+            64,
+            `rgba(255,0,0,${i * 0.06})`
+        );
     }
 
-    ctx.fillStyle = "white";
-    ctx.font = "bold 64px GamerFonte";
-    ctx.fillText("VOCE MORREU", largura / 2 + tremX, altura / 2 - 80 + tremY);
+    text("VOCE MORREU", x, y - 80, 64);
+    text(`Voce sobreviveu por ${tempo()}`, x, y - 20, 24, "rgba(255,255,255,.85)");
 
-    const minutos  = Math.floor(tempoJogo / 60).toString().padStart(2, "0");
-    const segundos = (tempoJogo % 60).toString().padStart(2, "0");
-    ctx.fillStyle = "rgba(255,255,255,0.7)";
-    ctx.font = "24px GamerFonte";
-    ctx.fillText(`Voce sobreviveu por ${minutos}:${segundos}`, largura / 2, altura / 2 - 20);
-
-    const btnW = 260;
-    const btnH = 60;
-    const btnX = largura / 2 - btnW / 2;
-    const btnY = altura / 2 + 20;
-
-    ctx.fillStyle = "#7c2a21";
-    ctx.fillRect(btnX, btnY, btnW, btnH);
-    ctx.fillStyle = "white";
-    ctx.font = "bold 28px GamerFonte";
-    ctx.fillText("Tentar Novamente", largura / 2, btnY + 42);
-
-    ctx.textAlign = "left";
+    btn(BTN.over, x - BTN.over.w / 2, y + 20);
 }
 
-// ── REINÍCIO ──────────────────────────────────────────────────────────────────
+// ── RESTO ─────────────────────────────
+
+export function iniciarJogo(spawnEnemy) {
+    jogoIniciado = true;
+    tInicio = Date.now();
+    tJogo = 0;
+
+    spawnEnemy();
+    clearInterval(intervalSpawn);
+    intervalSpawn = setInterval(spawnEnemy, taxaSpawn);
+}
 
 export function reiniciarJogo(spawnEnemy) {
-    timerMorte = 0;
-    tempoInicio = Date.now();
-    tempoJogo = 0;
+    tMorte = 0;
+    tInicio = Date.now();
+    tJogo = 0;
     taxaSpawn = 3000;
 
-    player.x = 0;
-    player.y = 0;
-    player.hp = 100;
-    player.ultimoDano = 0;
-
+    Object.assign(player, { x: 0, y: 0, hp: 100, ultimoDano: 0 });
     enemies.length = 0;
 
-    gun.balas = gun.maxBalas;
-    gun.recarregando = false;
-    gun.atirando = false;
-    gun.ultimoTiro = 0;
+    Object.assign(gun, {
+        balas: gun.maxBalas,
+        recarregando: false,
+        atirando: false,
+        ultimoTiro: 0
+    });
 
     clearInterval(intervalSpawn);
     intervalSpawn = setInterval(spawnEnemy, taxaSpawn);
 }
 
-// ── INPUT ─────────────────────────────────────────────────────────────────────
-
 export function initUI(spawnEnemy) {
-    intervalSpawn = setInterval(spawnEnemy, taxaSpawn);
+    canvas.addEventListener("click", e => {
+        const r = canvas.getBoundingClientRect();
+        const x = e.clientX - r.left;
+        const y = e.clientY - r.top;
 
-    canvas.addEventListener("click", (e) => {
-        if (player.hp > 0) return;
+        if (!jogoIniciado) {
+            const bx = W / 2 - BTN.menu.w / 2;
+            const by = H / 2 + 20;
 
-        const rect = canvas.getBoundingClientRect();
-        const clickX = e.clientX - rect.left;
-        const clickY = e.clientY - rect.top;
+            if (hit(x, y, bx, by, BTN.menu.w, BTN.menu.h)) {
+                iniciarJogo(spawnEnemy);
+                e.stopPropagation();
+            }
 
-        const btnW = 260;
-        const btnH = 60;
-        const btnX = largura / 2 - btnW / 2;
-        const btnY = altura / 2 + 20;
+            return;
+        }
 
-        if (clickX >= btnX && clickX <= btnX + btnW &&
-            clickY >= btnY && clickY <= btnY + btnH) {
-            reiniciarJogo(spawnEnemy);
+        if (player.hp <= 0) {
+            const bx = W / 2 - BTN.over.w / 2;
+            const by = H / 2 + 20;
+
+            if (hit(x, y, bx, by, BTN.over.w, BTN.over.h)) {
+                reiniciarJogo(spawnEnemy);
+                e.stopPropagation();
+            }
         }
     });
 }
