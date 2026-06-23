@@ -13,7 +13,7 @@ function gameLoop(timestamp) {
         updatePlayer(deltaTime);
         updateBullets(deltaTime);
         updateEnemies(deltaTime);
-        updateGun();
+        updateGun(deltaTime);
         updateTimer();
     }
 
