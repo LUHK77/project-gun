@@ -25,6 +25,7 @@ export class EvilBunny extends Enemy {
         this.hp     = 30;
         this.damage = 40;
         this.sprite = 64;
+        this.exp    = 40;
     }
 
     draw(camX, camY) {

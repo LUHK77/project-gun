@@ -25,6 +25,7 @@ window.addEventListener("click", () => {
     if (player.hp <= 0) return;
 
     gun.atirar(angulo);
+
 });
 
 window.addEventListener("keydown", (e) => {

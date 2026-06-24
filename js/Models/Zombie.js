@@ -25,6 +25,7 @@ export class Zombie extends Enemy {
         this.hp     = 40;
         this.damage = 10;
         this.sprite = 64;
+        this.exp    = 20;
     }
 
     draw(camX, camY) {

@@ -8,6 +8,7 @@ export class Enemy {
         this.x = x;
         this.y = y;
         this.size = 20;
+        this.exp = 0;
         this.speed = 1;
         this.sprite = 64;
         this.damage = 10;
@@ -34,7 +35,9 @@ export class Enemy {
             ehSolido(esquerda, cima)  ||
             ehSolido(direita,  cima)  ||
             ehSolido(esquerda, baixo) ||
-            ehSolido(direita,  baixo)
+            ehSolido(direita,  baixo) ||   
+            (Math.abs(player.x - x) < (player.size / 2.8) + (this.size / 2) &&
+             Math.abs(player.y - y) < (player.size / 2.8) + (this.size / 2))
         );
     }
 

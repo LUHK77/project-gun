@@ -1,5 +1,4 @@
 // js/map.js
-
 export const canvas = document.getElementById("canvas");
 export const ctx = canvas.getContext("2d");
 
@@ -42,7 +41,8 @@ export function geraBloco(tileX, tileY) {
 }
 
 export function ehSolido(tileX, tileY) {
-    return geraBloco(tileX, tileY) === "stone";
+    let validade = geraBloco(tileX, tileY) === "stone";
+    return validade;
 }
 
 export function drawMap(playerX, playerY) {
