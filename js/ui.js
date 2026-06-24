@@ -104,9 +104,10 @@ export function drawControls() {
     text("Mouse - Mirar", W / 2, 280, 32);
     text("Clique Esquerdo - Atirar", W / 2, 340, 32);
     text("R - Recarregar", W / 2, 400, 32);
+    text("ESC - Pausar e upgrades", W / 2, 460, 32);
 
     btn(
-        { w: 220, h: 60, text: "VOLTAR", color: "#555" },
+        { w: 220, h: 60, text: "VOLTAR", color: "#2d4e7c" },
         W / 2 - 110,
         H - 140
     );
