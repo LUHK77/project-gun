@@ -1,32 +1,33 @@
 import { Zombie } from './Models/Zombie.js';
 import { EvilBunny } from './Models/EvilBunny.js';
 import { ZombieDog } from './Models/ZombieDog.js';
+import { ZombieBird } from './Models/ZombieBird.js';
+
 import { player } from './Models/Player.js';
 import { enemies } from './Models/Enemy.js';
 import { state as upgradeState } from './upgradeUI.js';
 
 export function spawnEnemy() {
-if (upgradeState.escolhendoUpgrade) return;
+    if (upgradeState.escolhendoUpgrade) return;
 
     const angulo = Math.random() * Math.PI * 2;
     const distancia = 400 + Math.random() * 200;
 
-    let inimigoEspecial = Math.floor(Math.random() * 100 + 1); // 10% de chance de spawnar um inimigo especial (EvilBunny)
+    const x = player.x + Math.cos(angulo) * distancia;
+    const y = player.y + Math.sin(angulo) * distancia;
+
+    const inimigoEspecial = Math.floor(Math.random() * 100) + 1;
+
     if (inimigoEspecial <= 10) {
-        enemies.push(new EvilBunny(
-            player.x + Math.cos(angulo) * distancia,
-            player.y + Math.sin(angulo) * distancia
-        ));
-    } else if (inimigoEspecial <= 20) { // 10% de chance de spawnar um inimigo especial (ZombieDog)
-        enemies.push(new ZombieDog(
-            player.x + Math.cos(angulo) * distancia,
-            player.y + Math.sin(angulo) * distancia
-        ));
-    }
-     else {
-        enemies.push(new Zombie(
-            player.x + Math.cos(angulo) * distancia,
-            player.y + Math.sin(angulo) * distancia
-        ));
+        enemies.push(new EvilBunny(x, y));
+
+    } else if (inimigoEspecial <= 20) {
+        enemies.push(new ZombieDog(x, y));
+
+    } else if (inimigoEspecial <= 30) {
+        enemies.push(new ZombieBird(x, y));
+
+    } else {
+        enemies.push(new Zombie(x, y));
     }
 }
