@@ -3,8 +3,11 @@ import { EvilBunny } from './Models/EvilBunny.js';
 import { ZombieDog } from './Models/ZombieDog.js';
 import { player } from './Models/Player.js';
 import { enemies } from './Models/Enemy.js';
+import { state as upgradeState } from './upgradeUI.js';
 
 export function spawnEnemy() {
+if (upgradeState.escolhendoUpgrade) return;
+
     const angulo = Math.random() * Math.PI * 2;
     const distancia = 400 + Math.random() * 200;
 

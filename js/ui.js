@@ -6,6 +6,7 @@ import { gun } from './Models/Pistol.js';
 const W = LARGURA, H = ALTURA;
 
 export let jogoIniciado = false;
+export let mostrandoControles = false;
 export let taxaSpawn = 3000;
 export let intervalSpawn = null;
 
@@ -22,8 +23,9 @@ img.menu.src = "assets/menu-bg.png";
 img.over.src = "assets/gameover-bg.png";
 
 const BTN = {
-    menu: { w: 280, h: 70, text: "INICIAR JOGO", color: "#2d7c31" },
-    over: { w: 260, h: 60, text: "Tentar Novamente", color: "#7c2a21" }
+    menu: { w: 280, h: 70, text: "INICIAR JOGO", color: "#2d4e7c" },
+    controles: { w: 280, h: 70, text: "CONTROLES", color: "#2d4e7c" },
+    over: { w: 260, h: 60, text: "TENTAR NOVAMENTE", color: "#7c2a21" }
 };
 
 // ── HELPERS ─────────────────────────────
@@ -69,6 +71,7 @@ export function updateTimer(spawnEnemy) {
 
     if (n !== taxaSpawn) {
         taxaSpawn = n;
+
         clearInterval(intervalSpawn);
         intervalSpawn = setInterval(spawnEnemy, n);
     }
@@ -87,7 +90,26 @@ export function drawMenu() {
     text("Zombie Survivors", W / 2, H / 2 - 140, 90);
     text("Sobreviva o apocalipse", W / 2, H / 2 - 80, 28, "rgba(255,255,255,.85)");
 
-    btn(BTN.menu, W / 2 - BTN.menu.w / 2, H / 2 + 20);
+    btn(BTN.menu, W / 2 - BTN.menu.w / 2, H / 2);
+    btn(BTN.controles, W / 2 - BTN.controles.w / 2, H / 2 + 100);
+}
+
+export function drawControls() {
+    drawBg(img.menu);
+    rect(0, 0, W, H, "rgba(0,0,0,.75)");
+
+    text("CONTROLES", W / 2, 120, 60);
+
+    text("WASD - Movimentar", W / 2, 220, 32);
+    text("Mouse - Mirar", W / 2, 280, 32);
+    text("Clique Esquerdo - Atirar", W / 2, 340, 32);
+    text("R - Recarregar", W / 2, 400, 32);
+
+    btn(
+        { w: 220, h: 60, text: "VOLTAR", color: "#555" },
+        W / 2 - 110,
+        H - 140
+    );
 }
 
 // ── GAME OVER ─────────────────────────
@@ -134,7 +156,7 @@ export function reiniciarJogo(spawnEnemy) {
     tJogo = 0;
     taxaSpawn = 3000;
 
-    Object.assign(player, { x: 0, y: 0, hp: 100, ultimoDano: 0 });
+    Object.assign(player, { x: 0, y: 0, hp: 100, ultimoDano: 0 , ataque: 10, speed: 1, level: 1, xp: 0, xpProximoLevel: 100,});
     enemies.length = 0;
 
     Object.assign(gun, {
@@ -155,15 +177,36 @@ export function initUI(spawnEnemy) {
         const y = e.clientY - r.top;
 
         if (!jogoIniciado) {
-            const bx = W / 2 - BTN.menu.w / 2;
-            const by = H / 2 + 20;
 
-            if (hit(x, y, bx, by, BTN.menu.w, BTN.menu.h)) {
-                iniciarJogo(spawnEnemy);
-                e.stopPropagation();
+        if (mostrandoControles) {
+            const bx = W / 2 - 110;
+            const by = H - 140;
+
+            if (hit(x, y, bx, by, 220, 60)) {
+                mostrandoControles = false;
             }
 
             return;
+        }
+
+        const startX = W / 2 - BTN.menu.w / 2;
+        const startY = H / 2;
+
+        const ctrlX = W / 2 - BTN.controles.w / 2;
+        const ctrlY = H / 2 + 100;
+
+        if (hit(x, y, startX, startY, BTN.menu.w, BTN.menu.h)) {
+            iniciarJogo(spawnEnemy);
+            e.stopPropagation();
+            return;
+        }
+
+        if (hit(x, y, ctrlX, ctrlY, BTN.controles.w, BTN.controles.h)) {
+            mostrandoControles = true;
+            return;
+        }
+
+        return;
         }
 
         if (player.hp <= 0) {

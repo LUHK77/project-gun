@@ -1,13 +1,17 @@
-// js/main.js
+import { ctx, canvas, drawMap, LARGURA, ALTURA } from './map.js';
 
-import { ctx, drawMap, LARGURA, ALTURA } from './map.js';
 import { player } from './Models/Player.js';
 import { updateEnemies, drawEnemies } from './Models/Enemy.js';
 import { gun } from './Models/Pistol.js';
 import { angulo, mouse } from './Models/Gun.js';
 import { updateBullets, drawBullets } from './Models/Bullet.js';
 import { spawnEnemy } from './spawner.js';
-import { escolhendoUpgrade, drawUpgrade, handleUpgradeClick } from './upgradeUI.js';
+
+import {
+    state as upgradeState,
+    drawUpgrade,
+    handleUpgradeClick
+} from './upgradeUI.js';
 
 import {
     initUI,
@@ -15,31 +19,85 @@ import {
     drawTimer,
     drawGameOver,
     drawMenu,
+    drawControls,
+    mostrandoControles,
     jogoIniciado
 } from './ui.js';
 
-// Clique para atirar / upgrade
+
+// ─────────────────────────────
+// INPUT
+// ─────────────────────────────
+
 window.addEventListener("mousedown", (e) => {
-    if (escolhendoUpgrade) {
-        const rect = canvas.getBoundingClientRect();
-        handleUpgradeClick(e.clientX - rect.left, e.clientY - rect.top);
+    const rect = canvas.getBoundingClientRect();
+
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+
+    const p = player.retrato;
+
+    // abre upgrade
+    if (
+        p &&
+        mx >= p.x &&
+        mx <= p.x + p.w &&
+        my >= p.y &&
+        my <= p.y + p.h
+    ) {
+        upgradeState.escolhendoUpgrade = true;
+        gun.segurando = false;
         return;
     }
+
+    // clique no upgrade
+    if (upgradeState.escolhendoUpgrade) {
+        handleUpgradeClick(mx, my);
+        gun.segurando = false;
+        return;
+    }
+
+    // tiro normal
     gun.segurando = true;
 });
 
-window.addEventListener("mouseup", () => { gun.segurando = false; });
-
-window.addEventListener("keydown", (e) => {
-    if (e.key.toLowerCase() === "r") gun.recarregar();
+window.addEventListener("mouseup", () => {
+    gun.segurando = false;
 });
 
-// Inicializa a UI
+window.addEventListener("blur", () => {
+    gun.segurando = false;
+});
+
+window.addEventListener("keydown", (e) => {
+
+    if (e.key === "Escape") {
+        upgradeState.escolhendoUpgrade = !upgradeState.escolhendoUpgrade;
+        return;
+    }
+
+    // reload
+    if (e.key.toLowerCase() === "r") {
+        gun.recarregar();
+    }
+});
+
+
+// ─────────────────────────────
+// INIT
+// ─────────────────────────────
+
 initUI(spawnEnemy);
 
 let ultimoFrame = 0;
 
+
+// ─────────────────────────────
+// GAME LOOP
+// ─────────────────────────────
+
 function gameLoop(timestamp) {
+
     const deltaTime = (timestamp - ultimoFrame) / 1000;
     ultimoFrame = timestamp;
 
@@ -47,13 +105,24 @@ function gameLoop(timestamp) {
 
     // MENU
     if (!jogoIniciado) {
-        drawMenu();
+        if (mostrandoControles) {
+            drawControls();
+        } else {
+            drawMenu();
+        }
+
         requestAnimationFrame(gameLoop);
         return;
     }
 
-    // JOGO RODANDO — pausa quando escolhendo upgrade
-    if (player.hp > 0 && !escolhendoUpgrade) {
+    // ─────────────────────────────
+    // PAUSA
+    // ─────────────────────────────
+    const paused =
+        player.hp <= 0 ||
+        upgradeState.escolhendoUpgrade;
+
+    if (!paused) {
         player.update(deltaTime, mouse);
         updateBullets(deltaTime);
         updateEnemies(deltaTime);
@@ -61,21 +130,34 @@ function gameLoop(timestamp) {
         updateTimer(spawnEnemy);
     }
 
+    // ─────────────────────────────
+    // DRAW
+    // ─────────────────────────────
+
     drawMap(player.x, player.y);
     drawEnemies();
     drawBullets();
+
     player.draw(mouse);
+
     gun.draw();
     gun.drawBarra();
+
     drawTimer();
 
-    if (player.hp <= 0) drawGameOver();
+    if (player.hp <= 0) {
+        drawGameOver();
+    }
 
-    // Upgrade por cima de tudo
     drawUpgrade();
 
     requestAnimationFrame(gameLoop);
 }
+
+
+// ─────────────────────────────
+// START
+// ─────────────────────────────
 
 document.fonts.ready.then(() => {
     requestAnimationFrame(gameLoop);
