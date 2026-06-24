@@ -4,10 +4,13 @@ export const ctx = canvas.getContext("2d");
 
 // Corrige escala em telas de alto DPI
 const dpr = window.devicePixelRatio || 1;
-canvas.width  = 1440 * dpr;
-canvas.height = 850  * dpr;
-canvas.style.width  = "1440px";
-canvas.style.height = "850px";
+export const LARGURA = window.innerWidth;
+export const ALTURA  = window.innerHeight;
+
+canvas.width  = LARGURA * dpr;
+canvas.height = ALTURA  * dpr;
+canvas.style.width  = LARGURA + "px";
+canvas.style.height = ALTURA  + "px";
 ctx.scale(dpr, dpr);
 
 // Sprites dos tiles
@@ -46,13 +49,13 @@ export function ehSolido(tileX, tileY) {
 }
 
 export function drawMap(playerX, playerY) {
-    const camX = playerX - 1440 / 2;
-    const camY = playerY - 850  / 2;
+    const camX = playerX - LARGURA / 2;
+    const camY = playerY - ALTURA / 2;
 
     const firstTileX = Math.floor(camX / blocoTamanho);
     const firstTileY = Math.floor(camY / blocoTamanho);
-    const lastTileX  = firstTileX + Math.ceil(1440 / blocoTamanho) + 1;
-    const lastTileY  = firstTileY + Math.ceil(850  / blocoTamanho) + 1;
+    const lastTileX  = firstTileX + Math.ceil(LARGURA / blocoTamanho) + 1;
+    const lastTileY  = firstTileY + Math.ceil(ALTURA  / blocoTamanho) + 1;
 
     for (let y = firstTileY; y <= lastTileY; y++) {
         for (let x = firstTileX; x <= lastTileX; x++) {

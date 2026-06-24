@@ -21,12 +21,12 @@ export class ZombieDog extends Enemy {
 
     constructor(x, y) {
         super(x, y);
-        this.speed  = 1.7;
+        this.speed  = 2;
         this.hp     = 120;
         this.damage = 30;
         this.sprite = 96;
         this.size = 30;
-        this.exp = 60;
+        this.xp = 60;
     }
 
     draw(camX, camY) {

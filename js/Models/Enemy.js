@@ -1,6 +1,6 @@
 // js/Models/Enemy.js
 
-import { ctx, blocoTamanho, ehSolido } from '../map.js';
+import { ctx, blocoTamanho, ehSolido, LARGURA, ALTURA } from '../map.js';
 import { player } from './Player.js';
 
 export class Enemy {
@@ -8,8 +8,8 @@ export class Enemy {
         this.x = x;
         this.y = y;
         this.size = 20;
-        this.exp = 0;
-        this.speed = 1;
+        this.xp = 0;
+        this.speed = 1.5;
         this.sprite = 64;
         this.damage = 10;
         this.hp = 40;
@@ -88,7 +88,7 @@ export function updateEnemies(deltaTime) {
 }
 
 export function drawEnemies() {
-    const camX = player.x - 1440 / 2;
-    const camY = player.y - 850  / 2;
+    const camX = player.x - LARGURA / 2;
+    const camY = player.y - ALTURA / 2;
     for (const e of enemies) e.draw(camX, camY);
 }

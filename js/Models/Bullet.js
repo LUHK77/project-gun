@@ -1,6 +1,6 @@
 // js/Models/Bullet.js
 
-import { ctx, blocoTamanho, ehSolido } from '../map.js';
+import { ctx, blocoTamanho, ehSolido, LARGURA, ALTURA } from '../map.js';
 import { player } from './Player.js';
 import { enemies } from './Enemy.js';
 
@@ -48,9 +48,12 @@ export class Bullet {
                 const e = enemies[j];
                 const dist = Math.sqrt((this.x - e.x) ** 2 + (this.y - e.y) ** 2);
                 if (dist < e.size / 2 + this.tamanho) {
-                    e.hp -= this.dano;
+                    e.hp -= this.dano + player.ataque; // Adiciona o ataque do jogador ao dano da bala
                     e.ultimoDano = Date.now();
-                    if (e.hp <= 0) enemies.splice(j, 1);
+                    if (e.hp <= 0) {
+                        enemies.splice(j, 1);
+                        player.ganharXP(e.xp);
+                    }
                     this.acertou = true;
                     this.timerDano = 40;
                     break;
@@ -65,7 +68,7 @@ export class Bullet {
             const opacidade = this.timerDano / 40;
             ctx.fillStyle = `rgba(255, 255, 255, ${opacidade})`;
             ctx.font = "bold 14px GamerFonte";
-            ctx.fillText("-" + this.dano, this.x - camX, this.y - camY);
+            ctx.fillText("-" + (this.dano + player.ataque), this.x - camX, this.y - camY);
         } else {
             ctx.save();
             ctx.translate(this.x - camX, this.y - camY);
@@ -108,7 +111,7 @@ export function updateBullets(deltaTime) {
 }
 
 export function drawBullets() {
-    const camX = player.x - 1440 / 2;
-    const camY = player.y - 850  / 2;
+    const camX = player.x - LARGURA / 2;
+    const camY = player.y - ALTURA / 2;
     for (const b of bullets) b.draw(camX, camY);
 }

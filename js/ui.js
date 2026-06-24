@@ -1,9 +1,9 @@
-import { ctx, canvas } from './map.js';
+import { ctx, canvas, LARGURA, ALTURA } from './map.js';
 import { player } from './Models/Player.js';
 import { enemies } from './Models/Enemy.js';
 import { gun } from './Models/Pistol.js';
 
-const W = 1440, H = 850;
+const W = LARGURA, H = ALTURA;
 
 export let jogoIniciado = false;
 export let taxaSpawn = 3000;

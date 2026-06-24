@@ -1,6 +1,6 @@
 // js/Models/Pistol.js
 
-import { ctx } from '../map.js';
+import { ctx, LARGURA, ALTURA } from '../map.js';
 import { Gun, mouse, angulo } from './Gun.js';
 
 export class Pistol extends Gun {
@@ -26,7 +26,7 @@ export class Pistol extends Gun {
 
     constructor() {
         super();
-        this.dano = 20;
+        this.dano = 10;
         this.sprite = 50;
         this.spriteRecoil = 30;
         this.cadencia = 500;
@@ -37,8 +37,8 @@ export class Pistol extends Gun {
     }
 
     draw() {
-        const px = 1440 / 2;
-        const py = 850  / 2;
+        const px = LARGURA / 2;
+        const py = ALTURA / 2;
 
         let sprite;
         let tamanho;

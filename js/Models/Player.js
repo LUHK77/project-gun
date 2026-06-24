@@ -1,6 +1,7 @@
 // js/Models/Player.js
 
-import { canvas, ctx, blocoTamanho, ehSolido } from '../map.js';
+import { canvas, ctx, blocoTamanho, ehSolido, LARGURA, ALTURA } from '../map.js';
+import { abrirUpgrade } from '../upgradeUI.js';
 
 export class Player {
     static framesIdle   = [];
@@ -28,9 +29,13 @@ export class Player {
         this.y = 0;
         this.size = 28;
         this.sprite = 64;
-        this.speed = 0.8;
+        this.speed = 1;
         this.hp = 100;
+        this.ataque = 10;
         this.ultimoDano = 0;
+        this.level = 1;
+        this.xp = 0;
+        this.xpProximoLevel = 100; // xp necessário pro próximo level
 
         this.animacao = {
             frame: 0,
@@ -42,6 +47,21 @@ export class Player {
         this.keys = {};
         window.addEventListener("keydown", (e) => { this.keys[e.key.toLowerCase()] = true; });
         window.addEventListener("keyup",   (e) => { this.keys[e.key.toLowerCase()] = false; });
+    }
+
+    levelUp() {
+    this.level++;
+    this.xp = 0;
+    this.xpProximoLevel = this.level * 100; // aumenta conforme o level
+    // chama a UI de escolha de upgrade
+    abrirUpgrade();
+    }
+
+    ganharXP(quantidade) {
+    this.xp += quantidade;
+        if (this.xp >= this.xpProximoLevel) {
+        this.levelUp();
+        }
     }
 
     bateu(x, y) {
@@ -92,32 +112,58 @@ export class Player {
     }
 
     draw(mouse) {
-        const px = 1440 / 2;
-        const py = 850  / 2;
+    const px = LARGURA / 2;
+    const py = ALTURA  / 2;
 
-        const piscando = Date.now() - this.ultimoDano < 100;
-        const frames = piscando ? Player.framesDamage : this.animacao.frames;
+    const piscando = Date.now() - this.ultimoDano < 100;
+    const frames = piscando ? Player.framesDamage : this.animacao.frames;
 
-        ctx.save();
-        ctx.translate(px, py);
-        if (mouse.x < px) ctx.scale(-1, 1);
-        ctx.drawImage(frames[this.animacao.frame], -this.sprite / 2, -this.sprite / 2, this.sprite, this.sprite);
-        ctx.restore();
+    ctx.save();
+    ctx.translate(px, py);
+    if (mouse.x < px) ctx.scale(-1, 1);
+    ctx.drawImage(frames[this.animacao.frame], -this.sprite / 2, -this.sprite / 2, this.sprite, this.sprite);
+    ctx.restore();
 
-        // Barra de vida
-        const barraL = 100;
-        const barraA = 20;
+    // Barra de vida
+    const barraL = 100;
+    const barraA = 20;
 
+    ctx.fillStyle = "white";
+    ctx.font = "bold 22px GamerFonte";
+    ctx.fillText("HP:", 65, 11 + barraA);
+
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(10 + barraL, 10, barraL + 6, barraA + 6);
+
+    ctx.fillStyle = "white";
+    ctx.fillRect(10 + barraL + 3, 13, this.hp, barraA);
+
+    // Barra de XP — na parte inferior da tela centralizada
+        const xpBarraW = 900;
+        const xpBarraH = 16;
+        const xpBarraX = LARGURA / 2 - xpBarraW / 2;
+        const xpBarraY = ALTURA - 30;
+
+        // Fundo
+        ctx.fillStyle = "rgba(0,0,0,0.5)";
+        ctx.fillRect(xpBarraX, xpBarraY, xpBarraW, xpBarraH);
+
+        // Preenchimento proporcional ao XP
+        ctx.fillStyle = "white";
+        ctx.fillRect(xpBarraX, xpBarraY, xpBarraW * (this.xp / this.xpProximoLevel), xpBarraH);
+
+        // Borda
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(xpBarraX, xpBarraY, xpBarraW, xpBarraH);
+
+        // Level centralizado acima da barra
         ctx.fillStyle = "white";
         ctx.font = "bold 22px GamerFonte";
-        ctx.fillText("HP:", 65, 11 + barraA);
-
-        ctx.strokeStyle = "white";
-        ctx.lineWidth = 2;
-        ctx.strokeRect(10 + barraL, 10, barraL + 6, barraA + 6);
-
-        ctx.fillStyle = "white";
-        ctx.fillRect(10 + barraL + 3, 13, this.hp, barraA);
+        ctx.textAlign = "center";
+        ctx.fillText(`LV ${this.level}`, LARGURA / 2, xpBarraY - 5);
+        ctx.textAlign = "left";
     }
 }
 

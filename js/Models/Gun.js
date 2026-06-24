@@ -1,6 +1,6 @@
 // js/Models/Gun.js
 
-import { ctx, canvas } from '../map.js';
+import { ctx, canvas, LARGURA, ALTURA } from '../map.js';
 import { player } from './Player.js';
 import { spawnBullet } from './Bullet.js';
 
@@ -12,7 +12,7 @@ window.addEventListener("mousemove", (e) => {
     const rect = canvas.getBoundingClientRect();
     mouse.x = e.clientX - rect.left;
     mouse.y = e.clientY - rect.top;
-    angulo = Math.atan2(mouse.y - 850 / 2, mouse.x - 1440 / 2);
+    angulo = Math.atan2(mouse.y - ALTURA / 2, mouse.x - LARGURA / 2);
 });
 
 // Classe Gun representa uma arma no jogo, com propriedades e métodos
@@ -24,6 +24,7 @@ export class Gun {
         this.cadencia = 0; // velocidade de cada disparo
         this.ultimoTiro = 0; // Timestamp do último disparo
         this.atirando = false; // Indica se a arma está atirando
+        this.segurando = false; // Indica se o botão de disparo está sendo pressionado
         this.balas = 0; // Número de balas restantes
         this.maxBalas = 0; // Número máximo de balas
         this.recarregando = false; // Indica se a arma está recarregando
@@ -66,7 +67,7 @@ export class Gun {
         }
     }
 
-    update(deltaTime) {
+    update(deltaTime, angulo) {
         const agora = Date.now();
 
         if (this.recarregando) {
@@ -81,6 +82,11 @@ export class Gun {
                 this.animacao.frame = 0;
             }
             return;
+        }
+
+        // Atira automaticamente enquanto segura o botão
+        if (this.segurando) {
+            this.atirar(angulo); // precisa receber angulo aqui
         }
 
         if (this.atirando) {
@@ -99,8 +105,8 @@ export class Gun {
     draw() {}
 
     drawBarra() {
-        const px = 1440 / 2;
-        const py = 850  / 2;
+        const px = LARGURA / 2;
+        const py = ALTURA / 2;
         const barraX = px - 20;
         const barraY = py + player.sprite / 2 + 8;
         const barraW = 40;
