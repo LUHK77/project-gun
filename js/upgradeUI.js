@@ -13,32 +13,20 @@ export function abrirUpgrade() {
 
 // Botões de upgrade
 const botoes = [
-    {
-        label: "ATK",
+    { 
+        label: "ATK", 
         descricao: () => player.ataque,
-        aplicar: () => {
-            if (player.pontosUpgrade <= 0) return;
-            player.ataque += 2;
-            player.pontosUpgrade--;
-        }
+        aplicar: () => { player.ataque += 1; }
     },
-    {
-        label: "Vel",
+    { 
+        label: "Vel", 
         descricao: () => Math.round(player.speed * 10),
-        aplicar: () => {
-            if (player.pontosUpgrade <= 0) return;
-            player.speed += 0.1;
-            player.pontosUpgrade--;
-        }
+        aplicar: () => { player.speed += 0.1; }
     },
-    {
-        label: "HP",
+    { 
+        label: "HP",  
         descricao: () => player.hp / 10,
-        aplicar: () => {
-            if (player.pontosUpgrade <= 0) return;
-            player.hp += 10;
-            player.pontosUpgrade--;
-        }
+        aplicar: () => { player.hp += 10; }
     },
 ];
 
@@ -153,6 +141,8 @@ export function drawUpgrade() {
 
 export function handleUpgradeClick(mx, my) {
     if (!state.escolhendoUpgrade) return;
+
+    // fechar menu
     if (
         mx >= state._closeX &&
         mx <= state._closeX + state._closeSize &&
@@ -171,7 +161,12 @@ export function handleUpgradeClick(mx, my) {
             my >= b._y &&
             my <= b._y + b._size
         ) {
-            b.aplicar();
+            // só compra se tiver pontos disponíveis
+            if (player.pontosUpgrade > 0) {
+                b.aplicar();
+                player.pontosUpgrade--;
+            }
+
             return;
         }
     }

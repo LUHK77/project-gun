@@ -41,16 +41,12 @@ export class Player {
 
         this.level = 1;
         this.xp = 0;
-        this.xpProximoLevel = 100;
 
         this.ultimoDano = 0;
 
-        this.retrato = {
-            x: 10,
-            y: 10,
-            w: 60,
-            h: 60
-        };
+        this.retrato = {x: 10, y: 10,w: 60, h: 60};
+        
+        this.xpProximoLevel = 200; // xp necessário pro próximo level
 
         this.animacao = {
             frame: 0,
