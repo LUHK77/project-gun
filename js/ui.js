@@ -65,7 +65,7 @@ export function updateTimer(spawnEnemy) {
 
     tJogo = Math.floor((Date.now() - tInicio) / 1000);
 
-    const n = Math.max(500, 3000 - Math.floor(tJogo / 60) * 500);
+    const n = Math.max(500, 1500 - Math.floor(tJogo / 60) * 3000);
 
     if (n !== taxaSpawn) {
         taxaSpawn = n;
@@ -132,7 +132,8 @@ export function reiniciarJogo(spawnEnemy) {
     tMorte = 0;
     tInicio = Date.now();
     tJogo = 0;
-    taxaSpawn = 3000;
+    player.level = 1;
+    taxaSpawn = 2500;
 
     Object.assign(player, { x: 0, y: 0, hp: 100, ultimoDano: 0 });
     enemies.length = 0;

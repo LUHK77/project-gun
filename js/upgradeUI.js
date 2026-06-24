@@ -11,9 +11,21 @@ export function abrirUpgrade() {
 
 // Botões de upgrade
 const botoes = [
-    { label: "ATK", descricao: () => player.ataque, aplicar: () => { player.ataque += 2; } },
-    { label: "Vel", descricao: () => Math.round(player.speed * 10), aplicar: () => { player.speed += 0.1; } },
-    { label: "HP",  descricao: () => (player.hp /10), aplicar: () => { player.hp += 10; } },
+    { 
+        label: "ATK", 
+        descricao: () => player.ataque,
+        aplicar: () => { player.ataque += 1; }
+    },
+    { 
+        label: "Vel", 
+        descricao: () => Math.round(player.speed * 10),
+        aplicar: () => { player.speed += 0.1; }
+    },
+    { 
+        label: "HP",  
+        descricao: () => player.hp / 10,
+        aplicar: () => { player.hp += 10; }
+    },
 ];
 
 export function drawUpgrade() {

@@ -35,7 +35,7 @@ export class Player {
         this.ultimoDano = 0;
         this.level = 1;
         this.xp = 0;
-        this.xpProximoLevel = 100; // xp necessário pro próximo level
+        this.xpProximoLevel = 200; // xp necessário pro próximo level
 
         this.animacao = {
             frame: 0,
