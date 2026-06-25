@@ -168,7 +168,7 @@ export function spawnBullet(
             player.x + Math.cos(angulo) * 20,
             player.y + Math.sin(angulo) * 20,
             angulo,
-            dano,
+            dano + player.ataque,
             tamanhoSprite,
             "player"
         )

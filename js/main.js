@@ -1,5 +1,4 @@
 import { ctx, canvas, drawMap, LARGURA, ALTURA } from './map.js';
-
 import { player } from './Models/Player.js';
 import { updateEnemies, drawEnemies } from './Models/Enemy.js';
 import { gun } from './Models/Pistol.js';

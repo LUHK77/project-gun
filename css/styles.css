@@ -9,22 +9,3 @@
     box-sizing: border-box;
     background-color: #222;
 }
-
-body {
-    width: 100vw;       
-    height: 100vh;      
-    background:#222;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-canvas{
-
-    display: block;
-    width: 1440px;
-    height: 850px;
-    image-rendering: pixelated;
-    border: 5px solid #312730;
-    
-}
