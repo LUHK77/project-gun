@@ -36,6 +36,7 @@ export class Player {
 
         this.speed = 1;
         this.hp = 100;
+        this.maxHp = 100;
 
         this.ataque = 10;
 
@@ -193,7 +194,7 @@ export class Player {
         ctx.strokeRect(
             10 + barraL + offset,
             10,
-            barraL + 6,
+            this.maxHp + 6,
             barraA + 6
         );
 

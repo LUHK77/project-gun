@@ -21,9 +21,9 @@ export class EvilBunny extends Enemy {
 
     constructor(x, y) {
         super(x, y);
-        this.speed  = 3;
-        this.hp     = 30;
-        this.damage = 40;
+        this.speed  = 2.5;
+        this.hp     = 40;
+        this.damage = 35;
         this.sprite = 64;
         this.xp    = 40;
     }

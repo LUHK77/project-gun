@@ -18,28 +18,27 @@ window.addEventListener("mousemove", (e) => {
 // Classe Gun representa uma arma no jogo, com propriedades e métodos
 export class Gun {
     constructor() {
-        this.dano = 0; // Dano da arma
-        this.sprite = 0; // Sprite da arma
-        this.spriteRecoil = 0; // Sprite da arma recarregando
-        this.cadencia = 0; // velocidade de cada disparo
-        this.ultimoTiro = 0; // Timestamp do último disparo
-        this.atirando = false; // Indica se a arma está atirando
-        this.segurando = false; // Indica se o botão de disparo está sendo pressionado
-        this.balas = 0; // Número de balas restantes
-        this.maxBalas = 0; // Número máximo de balas
-        this.recarregando = false; // Indica se a arma está recarregando
-        this.tempoRecarga = 0; // Tempo necessário para recarregar a arma
-        this.inicioRecarga = 0; // Timestamp do início da recarga
-        this.tamanhoBalas = 0; // Tamanho das balas disparadas pela arma
-        
+        this.dano = 0; 
+        this.sprite = 0; 
+        this.spriteRecoil = 0; 
+        this.cadencia = 0; 
+        this.ultimoTiro = 0; 
+        this.atirando = false; 
+        this.segurando = false; 
+        this.balas = 0; 
+        this.maxBalas = 0;
+        this.recarregando = false;
+        this.tempoRecarga = 0; 
+        this.inicioRecarga = 0; 
+        this.tamanhoBalas = 0; 
         // Propriedades de animação da arma
         this.animacao = {
-            frame: 0, // Frame atual da animação
-            timer: 0, // Timer para controlar a velocidade da animação
-            velocidade: 2, // Velocidade da animação
+            frame: 0, 
+            timer: 0, 
+            velocidade: 2, 
         };
     }
-
+    //recarrega a arma, iniciando o processo de recarga se necessário
     recarregar() {
         if (this.recarregando || this.balas >= this.maxBalas) return; // evita recarregar à toa
         this.recarregando = true;
@@ -48,10 +47,11 @@ export class Gun {
         this.animacao.frame = 0;
         this.animacao.timer = 0;
     }
-
+    //reliza o disparo da arma, verificando se é possível atirar e criando uma bala na direção do ângulo fornecido
     atirar(angulo) {
-        if (this.recarregando || this.balas <= 0) return;
+        if (this.recarregando) return;
 
+        // Garante que a arma tenha um limite de tiro por segundo, baseado na cadência
         const agora = Date.now();
         if (agora - this.ultimoTiro < this.cadencia) return;
 
@@ -60,13 +60,14 @@ export class Gun {
         this.balas--;
         this.animacao.frame = 0;
         this.animacao.timer = 0;
+        // Cria uma bala na direção do ângulo fornecido, com o dano e tamanho especificados
         spawnBullet(angulo, this.dano, this.tamanhoBalas);
 
         if (this.balas <= 0) {
             this.recarregar();
         }
     }
-
+    // Atualiza o estado da arma, incluindo animação, recarga e disparo automático
     update(deltaTime, angulo) {
         const agora = Date.now();
 
@@ -101,9 +102,10 @@ export class Gun {
             }
         }
     }
-
+    // Apenas um método de desenho vazio, que será implementado nas subclasses específicas de armas
     draw() {}
-
+    
+    // Desenha a barra de munição da arma na tela, mostrando a quantidade de balas restantes e o estado de recarga
     drawBarra() {
         const px = LARGURA / 2;
         const py = ALTURA / 2;

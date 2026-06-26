@@ -158,7 +158,7 @@ export function reiniciarJogo(spawnEnemy) {
     player.level = 1;
     taxaSpawn = 2500;
 
-    Object.assign(player, { x: 0, y: 0, hp: 100, ultimoDano: 0 , ataque: 10, speed: 1, level: 1, xp: 0, xpProximoLevel: 100,});
+    Object.assign(player, { x: 0, y: 0, hp: 100, ultimoDano: 0 , ataque: 10, maxHp: 100, speed: 1, level: 1, xp: 0, xpProximoLevel: 100,});
     enemies.length = 0;
 
     Object.assign(gun, {

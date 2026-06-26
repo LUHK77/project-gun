@@ -1,8 +1,7 @@
 // js/Models/Enemy.js
-
 import { ctx, blocoTamanho, ehSolido, LARGURA, ALTURA } from '../map.js';
 import { player } from './Player.js';
-
+// A classe Enemy representa um inimigo no jogo, com propriedades e métodos para movimentação, ataque e desenho
 export class Enemy {
     constructor(x, y) {
         this.x = x;
@@ -13,18 +12,17 @@ export class Enemy {
         this.sprite = 64;
         this.damage = 10;
         this.hp = 40;
-
+        // Propriedades de animação do inimigo
         this.animacao = {
             frame: 0,
             timer: 0,
             velocidade: 4,
         };
-
         this.ultimoAtaque = 0;
         this.ultimoDano = 0;
         this.timerDano = 0;
     }
-
+    // Verifica se o inimigo colidiu com o mapa ou com o jogador, retornando true se houver colisão
     bateu(x, y) {
         const esquerda = Math.floor((x - this.size / 2) / blocoTamanho);
         const direita  = Math.floor((x + this.size / 2) / blocoTamanho);
@@ -40,7 +38,7 @@ export class Enemy {
              Math.abs(player.y - y) < (player.size / 2.8) + (this.size / 2))
         );
     }
-
+    // Atualiza a animação do inimigo, avançando o frame com base no tempo decorrido
     updateAnimacao(deltaTime) {
         this.animacao.timer += deltaTime * 60;
         if (this.animacao.timer >= this.animacao.velocidade) {
@@ -48,7 +46,7 @@ export class Enemy {
             this.animacao.frame = (this.animacao.frame + 1) % 9;
         }
     }
-
+    // Atualiza a posição e o estado do inimigo, movendo-o em direção ao jogador e aplicando dano se estiver próximo
     update(deltaTime) {
         const dx = player.x - this.x;
         const dy = player.y - this.y;

@@ -16,7 +16,7 @@ const botoes = [
     { 
         label: "ATK", 
         descricao: () => player.ataque,
-        aplicar: () => { player.ataque += 1; }
+        aplicar: () => { player.ataque += 2; }
     },
     { 
         label: "Vel", 
@@ -25,8 +25,8 @@ const botoes = [
     },
     { 
         label: "HP",  
-        descricao: () => player.hp / 10,
-        aplicar: () => { player.hp += 10; }
+        descricao: () => player.maxHp / 10,
+        aplicar: () => { player.hp += 10; player.maxHp += 10; }
     },
 ];
 

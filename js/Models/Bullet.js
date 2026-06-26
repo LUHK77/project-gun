@@ -8,7 +8,7 @@ export class Bullet {
     static sprite = new Image();
 
     static carregarSprite() {
-        Bullet.sprite.src = `assets/guns/bullet/sprite_0.png`;
+    Bullet.sprite.src = `assets/guns/bullet/sprite_0.png`;
     }
 
     constructor(

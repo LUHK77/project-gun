@@ -26,9 +26,9 @@ export class ZombieBird extends Enemy {
 
         this.speed = 1.2;
         this.hp = 40;
-        this.damage = 10;
+        this.damage = 15;
         this.sprite = 64;
-        this.xp = 20;
+        this.xp = 30;
 
         // ataque à distância
         this.attackCooldown = 2000; // 2 segundos
