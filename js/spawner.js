@@ -7,6 +7,7 @@ import { player } from './Models/Player.js';
 import { enemies } from './Models/Enemy.js';
 import { state as upgradeState } from './upgradeUI.js';
 
+// função que realiza o spawn de inimigos e da uma probabilidade de inimigos especiais
 export function spawnEnemy() {
     if (upgradeState.escolhendoUpgrade) return;
 

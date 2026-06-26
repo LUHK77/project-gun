@@ -8,7 +8,7 @@ import { spawnEnemyBullet } from './Bullet.js';
 export class ZombieBird extends Enemy {
     static frames = [];
     static framesDano = [];
-
+    // Carrega os sprites do inimigo Zombie Bird, incluindo os frames normais e os frames de dano
     static carregarSprites() {
         for (let i = 0; i <= 8; i++) {
             const img = new Image();
@@ -20,7 +20,7 @@ export class ZombieBird extends Enemy {
             ZombieBird.framesDano.push(imgDano);
         }
     }
-
+    // Define os atributos específicos do inimigo Zombie Bird
     constructor(x, y) {
         super(x, y);
 
@@ -37,7 +37,7 @@ export class ZombieBird extends Enemy {
         // distância máxima para atacar
         this.attackRange = 300;
     }
-
+    // metodo que atualiza a pocição o Zombie Bird de acordo com a do player
     update(deltaTime) {
         super.update(deltaTime);
 
@@ -47,7 +47,7 @@ export class ZombieBird extends Enemy {
         );
 
         const agora = Date.now();
-
+        // verifica se o player esta no renge do ataque e o ataca se estiver
         if (
             dist <= this.attackRange &&
             agora - this.lastAttack >= this.attackCooldown
@@ -56,7 +56,7 @@ export class ZombieBird extends Enemy {
             this.lastAttack = agora;
         }
     }
-
+    // metodo de ataque especial a distancia do Zombie Bird
     shoot() {
         const angulo = Math.atan2(
             player.y - this.y,
@@ -71,7 +71,7 @@ export class ZombieBird extends Enemy {
             32
         );
     }
-
+    // Desenha o inimigo Zombie Bird na tela, aplicando a animação correta com base no estado de dano e na posição do jogador
     draw(camX, camY) {
         const piscando =
             Date.now() - this.ultimoDano < 100;

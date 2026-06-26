@@ -12,6 +12,7 @@ export class Enemy {
         this.sprite = 64;
         this.damage = 10;
         this.hp = 40;
+        
         // Propriedades de animação do inimigo
         this.animacao = {
             frame: 0,
@@ -56,6 +57,7 @@ export class Enemy {
 
         if (this.timerDano > 0) this.timerDano--;
 
+        //Verifica se o inimigo está colidindo com o jogador e aplica dano se necessário
         if (dist < (player.size / 2) + (this.size / 2)) {
             const agora = Date.now();
             if (agora - this.ultimoAtaque > 1000) {
@@ -65,6 +67,7 @@ export class Enemy {
             }
         }
 
+        // Move o inimigo em direção ao jogador, evitando colisões com o mapa
         if (dist < 1) return;
 
         const vx = (dx / dist) * this.speed * 100 * deltaTime;
@@ -73,18 +76,18 @@ export class Enemy {
         if (!this.bateu(this.x + vx, this.y)) this.x += vx;
         if (!this.bateu(this.x, this.y + vy)) this.y += vy;
     }
-
+    // Função de desenho do inimigo, que deve ser implementada nas subclasses específicas de inimigos
     draw(camX, camY) {}
 }
 
 // ── GERENCIAMENTO ─────────────────────────────────────────────────────────────
 
 export const enemies = [];
-
+// Atualiza todos os inimigos spawnados, chamando o método update de cada um com base no tempo decorrido
 export function updateEnemies(deltaTime) {
     for (const e of enemies) e.update(deltaTime);
 }
-
+// Desenha todos os inimigos spawnados, chamando o método draw de cada um com base na posição da câmera
 export function drawEnemies() {
     const camX = player.x - LARGURA / 2;
     const camY = player.y - ALTURA / 2;

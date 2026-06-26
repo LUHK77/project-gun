@@ -5,12 +5,12 @@ import { abrirUpgrade } from '../upgradeUI.js';
 
 const retrato = new Image();
 retrato.src = "assets/player/retrato.png";
-
+// Classe do player que é responsavel por todas as funções gerais de movimentação e combate
 export class Player {
     static framesIdle = [];
     static framesMove = [];
     static framesDamage = [];
-
+    // Carrega os sprites do player que ficam nos arquvos assets
     static carregarSprites() {
         for (let i = 0; i <= 8; i++) {
             const idle = new Image();
@@ -26,7 +26,7 @@ export class Player {
             Player.framesDamage.push(damage);
         }
     }
-
+    // Atributos basicos do player 
     constructor() {
         this.x = 0;
         this.y = 0;
@@ -48,7 +48,7 @@ export class Player {
         this.retrato = {x: 10, y: 10,w: 60, h: 60};
         
         this.xpProximoLevel = 200; // xp necessário pro próximo level
-
+        // Atributos das animações do player
         this.animacao = {
             frame: 0,
             timer: 0,
@@ -66,7 +66,7 @@ export class Player {
             this.keys[e.key.toLowerCase()] = false;
         });
     }
-
+    // metodo que realiza o upgrade no player permitindo aumentar seus atributos
     levelUp() {
         this.level++;
         this.xp = 0;
@@ -74,14 +74,14 @@ export class Player {
         this.pontosUpgrade += 1;
         abrirUpgrade();
     }
-
+    // metodo para aumentar o xp do player
     ganharXP(qtd) {
         this.xp += qtd;
         if (this.xp >= this.xpProximoLevel) {
             this.levelUp();
         }
     }
-
+    // metodo de verificação de colisão do player
     bateu(x, y) {
         const e = Math.floor((x - this.size / 2) / blocoTamanho);
         const d = Math.floor((x + this.size / 2) / blocoTamanho);
@@ -95,7 +95,7 @@ export class Player {
             ehSolido(d, b)
         );
     }
-
+    // metodo para atualiza a animação se ele estiver se movendo ou parado
     updateAnimacao(movendo, dt) {
         this.animacao.timer += dt * 60;
 
@@ -108,7 +108,7 @@ export class Player {
             ? Player.framesMove
             : Player.framesIdle;
     }
-
+    // metodo que atualiza a posição do player de acordo com sua movimentação
     update(dt) {
         const vel = this.speed * 200 * dt;
 
@@ -123,6 +123,7 @@ export class Player {
         const movendo = dx !== 0 || dy !== 0;
         this.updateAnimacao(movendo, dt);
 
+        // Impede que o player fique mais rapido na diagonal
         const len = Math.hypot(dx, dy);
         if (len > 0) {
             dx /= len;
@@ -135,7 +136,7 @@ export class Player {
         const ny = this.y + dy * vel;
         if (!this.bateu(this.x, ny)) this.y = ny;
     }
-
+    // metodo que faz o desenho do player e suas informações na tela
     draw(mouse) {
         const px = LARGURA / 2;
         const py = ALTURA / 2;

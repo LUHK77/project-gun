@@ -70,7 +70,8 @@ export class Gun {
     // Atualiza o estado da arma, incluindo animação, recarga e disparo automático
     update(deltaTime, angulo) {
         const agora = Date.now();
-
+        
+        // Atualiza a animação da arma, avançando o frame com base no tempo decorrido
         if (this.recarregando) {
             this.animacao.timer += deltaTime * 60;
             if (this.animacao.timer >= this.animacao.velocidade) {

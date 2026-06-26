@@ -1,4 +1,4 @@
-// zombie.js
+//js/Models/EvilBunny.js
 import { ctx } from '../map.js';
 import { player } from './Player.js';
 import { Enemy } from './Enemy.js';
@@ -6,7 +6,7 @@ import { Enemy } from './Enemy.js';
 export class EvilBunny extends Enemy {
     static frames      = [];
     static framesDano  = [];
-
+    // Carrega os sprites do inimigo EvilBunny, incluindo os frames normais e os frames de dano
     static carregarSprites() {
         for (let i = 0; i <= 8; i++) {
             const img = new Image();
@@ -18,7 +18,7 @@ export class EvilBunny extends Enemy {
             EvilBunny.framesDano.push(imgDano);
         }
     }
-
+    // Define os atributos específicos do inimigo EvilBunny
     constructor(x, y) {
         super(x, y);
         this.speed  = 2.5;
@@ -27,7 +27,7 @@ export class EvilBunny extends Enemy {
         this.sprite = 64;
         this.xp    = 40;
     }
-
+    // Desenha o inimigo EvilBunny na tela, aplicando a animação correta com base no estado de dano e na posição do jogador
     draw(camX, camY) {
         const piscando = Date.now() - this.ultimoDano < 100;
         const frames = piscando ? EvilBunny.framesDano : EvilBunny.frames;

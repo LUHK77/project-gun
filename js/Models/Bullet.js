@@ -3,14 +3,14 @@
 import { ctx, blocoTamanho, ehSolido, LARGURA, ALTURA } from '../map.js';
 import { player } from './Player.js';
 import { enemies } from './Enemy.js';
-
+// A classe Bullet representa uma bala no jogo, com propriedades e métodos para movimentação, colisão e desenho
 export class Bullet {
     static sprite = new Image();
-
+    // Carrega o sprite da bala, definindo a imagem que será usada para desenhar a bala na tela
     static carregarSprite() {
     Bullet.sprite.src = `assets/guns/bullet/sprite_0.png`;
     }
-
+    // Construtor da classe Bullet, inicializando a posição, direção, velocidade, tamanho e outros atributos da bala
     constructor(
         x,
         y,
@@ -24,9 +24,8 @@ export class Bullet {
 
         this.dx = Math.cos(angulo);
         this.dy = Math.sin(angulo);
-
         this.velocidade = 3;
-        this.tamanho = 9;
+        this.tamanho = 8;
         this.tamanhoSprite = tamanhoSprite || 40;
 
         this.dano = dano;
@@ -35,7 +34,7 @@ export class Bullet {
         this.acertou = false;
         this.timerDano = 0;
     }
-
+    // Atualiza a posição da bala com base na direção e velocidade, verificando colisões com o mapa e inimigos/jogador
     update(deltaTime) {
         if (this.acertou) {
             this.timerDano--;
@@ -68,7 +67,7 @@ export class Bullet {
                         this.x - e.x,
                         this.y - e.y
                     );
-
+                    // Se a bala do jogador colidir com um inimigo, aplica o dano da arma somado ao do player
                     if (dist < e.size / 2 + this.tamanho) {
                         const danoFinal =
                             this.dano + player.ataque;
@@ -106,8 +105,9 @@ export class Bullet {
             if (this.acertou) break;
         }
     }
-
+    // Desenha a bala na tela, aplicando a rotação correta com base na direção da bala e exibindo o dano causado se a bala acertou um alvo
     draw(camX, camY) {
+        // Se a bala acertou um alvo, desenha o dano causado acima da posição da bala
         if (this.acertou) {
             const opacidade = this.timerDano / 40;
 
@@ -133,7 +133,7 @@ export class Bullet {
             ctx.rotate(
                 Math.atan2(this.dy, this.dx)
             );
-
+            
             ctx.drawImage(
                 Bullet.sprite,
                 -this.tamanhoSprite / 2,
@@ -157,7 +157,7 @@ function batuMapa(x, y) {
 
     return ehSolido(col, row);
 }
-
+// Função para spawnar uma bala do jogador, criando uma nova instância da classe Bullet e adicionando-a à lista de balas
 export function spawnBullet(
     angulo,
     dano,
@@ -174,7 +174,7 @@ export function spawnBullet(
         )
     );
 }
-
+// Função para spawnar uma bala de inimigo, criando uma nova instância da classe Bullet e adicionando-a à lista de balas
 export function spawnEnemyBullet(
     x,
     y,
@@ -193,7 +193,7 @@ export function spawnEnemyBullet(
         )
     );
 }
-
+// Atualiza todas as balas na lista, chamando o método update de cada bala e removendo as balas que acertaram um alvo e cujo timer de dano expirou
 export function updateBullets(deltaTime) {
     for (let i = bullets.length - 1; i >= 0; i--) {
         bullets[i].update(deltaTime);
@@ -206,7 +206,7 @@ export function updateBullets(deltaTime) {
         }
     }
 }
-
+// Desenha todas as balas na lista, chamando o método draw de cada bala e passando as coordenadas da câmera para ajustar a posição na tela
 export function drawBullets() {
     const camX = player.x - LARGURA / 2;
     const camY = player.y - ALTURA / 2;

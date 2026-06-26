@@ -2,7 +2,7 @@
 
 import { ctx, LARGURA, ALTURA } from '../map.js';
 import { Gun, mouse, angulo } from './Gun.js';
-
+// A classe Pistol representa uma arma específica no jogo, herdando da classe Gun e definindo propriedades e métodos específicos para a pistola
 export class Pistol extends Gun {
     static spriteIdle   = new Image();
     static framesShot   = [];
@@ -23,7 +23,7 @@ export class Pistol extends Gun {
             Pistol.framesReload.push(img);
         }
     }
-
+    // Construtor da classe Pistol, inicializando as propriedades específicas da pistola
     constructor() {
         super();
         this.dano = 10;
@@ -35,7 +35,7 @@ export class Pistol extends Gun {
         this.tempoRecarga = 2000;
         this.tamanhoBalas = 40;
     }
-
+    // Desenha a pistola na tela, aplicando a animação correta com base no estado de disparo, recarga e na posição do mouse
     draw() {
         const px = LARGURA / 2;
         const py = ALTURA / 2;

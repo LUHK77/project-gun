@@ -6,7 +6,7 @@ import { Enemy } from './Enemy.js';
 export class Zombie extends Enemy {
     static frames      = [];
     static framesDano  = [];
-
+    // Carrega os sprites do inimigo Zombie, incluindo os frames normais e os frames de dano
     static carregarSprites() {
         for (let i = 0; i <= 8; i++) {
             const img = new Image();
@@ -18,7 +18,7 @@ export class Zombie extends Enemy {
             Zombie.framesDano.push(imgDano);
         }
     }
-
+    // Define os atributos específicos do inimigo Zombie
     constructor(x, y) {
         super(x, y);
         this.speed  = 1;
@@ -27,7 +27,7 @@ export class Zombie extends Enemy {
         this.sprite = 64;
         this.xp    = 20;
     }
-
+    // Desenha o inimigo Zombie na tela, aplicando a animação correta com base no estado de dano e na posição do jogador
     draw(camX, camY) {
         const piscando = Date.now() - this.ultimoDano < 100;
         const frames = piscando ? Zombie.framesDano : Zombie.frames;
