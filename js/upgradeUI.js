@@ -1,17 +1,17 @@
 import { ctx, LARGURA, ALTURA } from './map.js';
 import { player } from './Models/Player.js';
 
-// estado do menu
+// estado do menu de upgrades inicialmente falso
 export const state = {
     escolhendoUpgrade: false
 };
 
-// abre menu
+// abre menu de upgrades
 export function abrirUpgrade() {
     state.escolhendoUpgrade = true;
 }
 
-// Botões de upgrade
+// botões de upgrade
 const botoes = [
     { 
         label: "ATK", 
@@ -29,15 +29,12 @@ const botoes = [
         aplicar: () => { player.hp += 10; player.maxHp += 10; }
     },
 ];
-
+//desenha o menu de upgrades
 export function drawUpgrade() {
     if (!state.escolhendoUpgrade) return;
-
-    // fundo escuro
     ctx.fillStyle = "rgba(0,0,0,0.75)";
     ctx.fillRect(0, 0, LARGURA, ALTURA);
 
-    // painel
     const painelW = 500;
     const painelH = 300;
     const painelX = LARGURA / 2 - painelW / 2;
@@ -45,12 +42,10 @@ export function drawUpgrade() {
 
     ctx.fillStyle = "#111";
     ctx.fillRect(painelX, painelY, painelW, painelH);
-
     ctx.strokeStyle = "white";
     ctx.lineWidth = 2;
     ctx.strokeRect(painelX, painelY, painelW, painelH);
 
-    // botão fechar (X)
     const size = 28;
     const closeX = painelX + painelW - size - 10;
     const closeY = painelY + 10;
@@ -68,7 +63,7 @@ export function drawUpgrade() {
     state._closeY = closeY;
     state._closeSize = size;
 
-    // pontos
+    // mostra a quantidade de pontos acumulados pelo player
     ctx.fillStyle = "white";
     ctx.font = "16px GamerFonte";
     ctx.textAlign = "center";
@@ -78,7 +73,7 @@ export function drawUpgrade() {
         painelY + 25
     );
 
-    // sprite
+    // sprite do player
     const spriteSize = 120;
     ctx.drawImage(
         player.animacao.frames[0],
@@ -88,7 +83,7 @@ export function drawUpgrade() {
         spriteSize
     );
 
-    // stats box
+    // caixa mostrando os atributos atuais do player
     const statsX = painelX + 200;
     const statsW = 260;
     const statsH = 220;
@@ -108,13 +103,13 @@ export function drawUpgrade() {
     botoes.forEach((b, i) => {
         const y = statsY + 50 + i * lineH;
 
-        // label
+        // nome do atributo
         ctx.fillStyle = "white";
         ctx.font = "16px GamerFonte";
         ctx.textAlign = "right";
         ctx.fillText(b.label + ":", statsX + 40, y + 18);
 
-        // valor
+        // valor do atributo
         const boxX = statsX + 50;
         const boxW = 150;
 
@@ -123,7 +118,7 @@ export function drawUpgrade() {
         ctx.textAlign = "center";
         ctx.fillText(b.descricao(), boxX + boxW / 2, y + 18);
 
-        // botão +
+        // botão de + para incrementar o atributo
         const btnX = boxX + boxW + 8;
         const btnSize = 26;
 
@@ -155,12 +150,8 @@ export function handleUpgradeClick(mx, my) {
 
     // upgrades
     for (const b of botoes) {
-        if (
-            mx >= b._x &&
-            mx <= b._x + b._size &&
-            my >= b._y &&
-            my <= b._y + b._size
-        ) {
+        //se o player clicou no botao de incrementar
+        if (mx >= b._x && mx <= b._x + b._size && my >= b._y && my <= b._y + b._size) {
             // só compra se tiver pontos disponíveis
             if (player.pontosUpgrade > 0) {
                 b.aplicar();

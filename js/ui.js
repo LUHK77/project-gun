@@ -13,7 +13,7 @@ export let intervalSpawn = null;
 let tMorte = 0;
 let tInicio = Date.now();
 let tJogo = 0;
-
+//imagens usadas para as telas de menu e game over
 const img = {
     menu: new Image(),
     over: new Image()
@@ -21,7 +21,7 @@ const img = {
 
 img.menu.src = "assets/menu-bg.png";
 img.over.src = "assets/gameover-bg.png";
-
+//botoes usados no codigo
 const BTN = {
     menu: { w: 280, h: 70, text: "INICIAR JOGO", color: "#2d4e7c" },
     controles: { w: 280, h: 70, text: "CONTROLES", color: "#2d4e7c" },
@@ -76,13 +76,12 @@ export function updateTimer(spawnEnemy) {
         intervalSpawn = setInterval(spawnEnemy, n);
     }
 }
-
+//desenha o timer no topo da tela
 export const drawTimer = () =>
     jogoIniciado && player.hp > 0 &&
     text(tempo(), W / 2, 40, 32);
 
-// ── MENU ─────────────────────────────
-
+//desenha o menu
 export function drawMenu() {
     drawBg(img.menu);
     rect(0, 0, W, H, "rgba(0,0,0,.55)");
@@ -93,7 +92,7 @@ export function drawMenu() {
     btn(BTN.menu, W / 2 - BTN.menu.w / 2, H / 2);
     btn(BTN.controles, W / 2 - BTN.controles.w / 2, H / 2 + 100);
 }
-
+//desenha a tela de controles
 export function drawControls() {
     drawBg(img.menu);
     rect(0, 0, W, H, "rgba(0,0,0,.75)");
@@ -113,8 +112,7 @@ export function drawControls() {
     );
 }
 
-// ── GAME OVER ─────────────────────────
-
+//desenha a tela de game over
 export function drawGameOver() {
     tMorte++;
 
@@ -139,8 +137,7 @@ export function drawGameOver() {
     btn(BTN.over, x - BTN.over.w / 2, y + 20);
 }
 
-// ── RESTO ─────────────────────────────
-
+//controla os estados quando o jogo é inciado e spawna o primeiro inimigo
 export function iniciarJogo(spawnEnemy) {
     jogoIniciado = true;
     tInicio = Date.now();
@@ -151,6 +148,7 @@ export function iniciarJogo(spawnEnemy) {
     intervalSpawn = setInterval(spawnEnemy, taxaSpawn);
 }
 
+//reseta os status do player quando o jogo é reiniciado após o player clicar em "tentar novamente"
 export function reiniciarJogo(spawnEnemy) {
     tMorte = 0;
     tInicio = Date.now();
@@ -171,7 +169,7 @@ export function reiniciarJogo(spawnEnemy) {
     clearInterval(intervalSpawn);
     intervalSpawn = setInterval(spawnEnemy, taxaSpawn);
 }
-
+//controla os cliques nos menus do jogo
 export function initUI(spawnEnemy) {
     canvas.addEventListener("click", e => {
         const r = canvas.getBoundingClientRect();
@@ -179,7 +177,7 @@ export function initUI(spawnEnemy) {
         const y = e.clientY - r.top;
 
         if (!jogoIniciado) {
-
+        //caso o jogo nao tenha sido iniciado e esteja na tela de controles
         if (mostrandoControles) {
             const bx = W / 2 - 110;
             const by = H - 140;
@@ -190,19 +188,19 @@ export function initUI(spawnEnemy) {
 
             return;
         }
-
+        //votoes da tela de menu
         const startX = W / 2 - BTN.menu.w / 2;
         const startY = H / 2;
 
         const ctrlX = W / 2 - BTN.controles.w / 2;
         const ctrlY = H / 2 + 100;
-
+        //botao de iniciar jogo
         if (hit(x, y, startX, startY, BTN.menu.w, BTN.menu.h)) {
             iniciarJogo(spawnEnemy);
             e.stopPropagation();
             return;
         }
-
+        //botao de controles
         if (hit(x, y, ctrlX, ctrlY, BTN.controles.w, BTN.controles.h)) {
             mostrandoControles = true;
             return;
@@ -214,7 +212,7 @@ export function initUI(spawnEnemy) {
         if (player.hp <= 0) {
             const bx = W / 2 - BTN.over.w / 2;
             const by = H / 2 + 20;
-
+            //botao de tentar novamente
             if (hit(x, y, bx, by, BTN.over.w, BTN.over.h)) {
                 reiniciarJogo(spawnEnemy);
                 e.stopPropagation();
