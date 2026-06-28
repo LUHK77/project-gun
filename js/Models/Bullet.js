@@ -69,10 +69,7 @@ export class Bullet {
                     );
                     // Se a bala do jogador colidir com um inimigo, aplica o dano da arma somado ao do player
                     if (dist < e.size / 2 + this.tamanho) {
-                        const danoFinal =
-                            this.dano + player.ataque;
-
-                        e.hp -= danoFinal;
+                        e.hp -= this.dano;
                         e.ultimoDano = Date.now();
 
                         if (e.hp <= 0) {

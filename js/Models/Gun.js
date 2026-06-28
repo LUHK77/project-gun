@@ -18,7 +18,7 @@ window.addEventListener("mousemove", (e) => {
 // Classe Gun representa uma arma no jogo, com propriedades e métodos
 export class Gun {
     constructor() {
-        this.dano = 0; 
+        this.dano = 0 + player.ataque; 
         this.sprite = 0; 
         this.spriteRecoil = 0; 
         this.cadencia = 0; 
